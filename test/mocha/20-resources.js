@@ -166,20 +166,30 @@ describe('resources', function() {
     assertCheckResult(result, expectedResult);
   });
 
-  it.skip('should force-record an unauthorized acquisition', async function() {
+  it('should force-record an unauthorized acquisition', async function() {
+    // TODO: make independent, currently depends on previous `acquire`
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
     const request = [
-      {resource: RESOURCES.APPLE, count: 1, requested: now}
+      {resource: RESOURCES.ORANGE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
     const zones = [ZONES.ONE, ZONES.TWO];
     const result = await resources.acquire(
       {acquirerId, request, acquisitionTtl, zones, forceAcquisition: true});
-    assertCheckResult(result);
+    const expectedResult = {
+      authorized: false,
+      excessResources: [{
+        resource: RESOURCES.ORANGE,
+        count: 1
+      }],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+    // TODO: get acquisition record and add assertions
   });
 
-  it.skip('should release an acquired resource', async function() {
+  it('should fail to release a non-acquired resource', async function() {
     const acquirerId = ACQUIRER_ID;
     const request = [
       {resource: RESOURCES.APPLE, count: 1}
@@ -187,6 +197,44 @@ describe('resources', function() {
     const acquisitionTtl = 30000;
     const result = await resources.release(
       {acquirerId, request, acquisitionTtl});
-    assertCheckResult(result);
+    const expectedExcess = [{resource: RESOURCES.APPLE, count: 1}];
+    should.exist(result);
+    result.should.be.an('object');
+    result.should.have.property('excessResources');
+    result.excessResources.should.be.an('array');
+    result.excessResources.should.deep.equal(expectedExcess);
+  });
+
+  it('should release a acquired resources', async function() {
+    const acquirerId = ACQUIRER_ID;
+    const request = [
+      {resource: RESOURCES.ORANGE, count: 2}
+    ];
+    const acquisitionTtl = 30000;
+    const result = await resources.release(
+      {acquirerId, request, acquisitionTtl});
+    should.exist(result);
+    result.should.be.an('object');
+    result.should.have.property('excessResources');
+    result.excessResources.should.be.an('array');
+    result.excessResources.should.deep.equal([]);
+  });
+
+  it('should acquire successfully again after release', async function() {
+    const now = Date.now();
+    const acquirerId = ACQUIRER_ID;
+    const request = [
+      {resource: RESOURCES.ORANGE, count: 1, requested: now}
+    ];
+    const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.acquire(
+      {acquirerId, request, acquisitionTtl, zones});
+    const expectedResult = {
+      authorized: true,
+      excessResources: [],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
   });
 });
