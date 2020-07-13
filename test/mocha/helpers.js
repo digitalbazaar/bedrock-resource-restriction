@@ -10,7 +10,13 @@ exports.ACQUIRER_ID = uuid();
 
 exports.RESOURCES = {
   APPLE: uuid(),
-  ORANGE: uuid()
+  ORANGE: uuid(),
+  KIWI: uuid()
+};
+
+exports.ZONES = {
+  ONE: uuid(),
+  TWO: uuid()
 };
 
 exports.assertCheckResult = (result, expectedResult) => {
@@ -24,6 +30,18 @@ exports.assertCheckResult = (result, expectedResult) => {
   result.untrackedResources.should.be.an('array');
   if(expectedResult) {
     result.should.deep.equal(expectedResult);
+  }
+};
+
+exports.assertResourceRestriction = (actual, expected) => {
+  should.exist(actual);
+  actual.should.be.an('object');
+  actual.should.have.property('restriction');
+  actual.restriction.should.be.an('object');
+  actual.should.have.property('fn');
+  actual.fn.should.be.a('function');
+  if(expected.restriction) {
+    actual.restriction.should.deep.equal(expected.restriction);
   }
 };
 
