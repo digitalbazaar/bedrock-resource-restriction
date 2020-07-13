@@ -51,7 +51,7 @@ describe('resources', function() {
       restriction: {
         zone: ZONES.ONE,
         resource: RESOURCES.ORANGE,
-        method: 'limitOverPeriod',
+        method: 'limitOverDuration',
         methodOptions: {
           limit: 1,
           duration: 'P30D'

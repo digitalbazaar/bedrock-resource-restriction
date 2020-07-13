@@ -15,7 +15,7 @@ describe('restrictions', function() {
       restriction: {
         zone: ZONES.ONE,
         resource: RESOURCES.KIWI,
-        method: 'limitOverPeriod',
+        method: 'limitOverDuration',
         methodOptions: {
           limit: 1,
           duration: 'P30D'
@@ -25,7 +25,7 @@ describe('restrictions', function() {
     const expectedRestriction = {
       zone: ZONES.ONE,
       resource: RESOURCES.KIWI,
-      method: 'limitOverPeriod',
+      method: 'limitOverDuration',
       methodOptions: {
         limit: 1,
         duration: 'P30D'
@@ -47,7 +47,7 @@ describe('restrictions', function() {
     const expectedRestriction = {
       zone: ZONES.ONE,
       resource: RESOURCES.KIWI,
-      method: 'limitOverPeriod',
+      method: 'limitOverDuration',
       methodOptions: {
         limit: 1,
         duration: 'P30D'
@@ -85,7 +85,7 @@ describe('restrictions', function() {
     const expectedRestriction = {
       zone: ZONES.ONE,
       resource: RESOURCES.KIWI,
-      method: 'limitOverPeriod',
+      method: 'limitOverDuration',
       methodOptions: {
         limit: 1,
         duration: 'P30D'
