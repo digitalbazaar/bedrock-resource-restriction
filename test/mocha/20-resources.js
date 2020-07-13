@@ -96,43 +96,74 @@ describe('resources', function() {
     assertCheckResult(result, expectedResult);
   });
 
-  it.skip('should acquire a restricted resource', async function() {
+  it('should acquire with a restriction', async function() {
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
     const request = [
-      {resource: RESOURCES.APPLE, count: 1, requested: now}
+      {resource: RESOURCES.ORANGE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
     const zones = [ZONES.ONE, ZONES.TWO];
     const result = await resources.acquire(
       {acquirerId, request, acquisitionTtl, zones});
-    assertCheckResult(result);
+    const expectedResult = {
+      authorized: true,
+      excessResources: [],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
   });
 
-  it.skip('should deny a request with a restriction', async function() {
+  it('should deny an acquire request with a restriction', async function() {
+    // TODO: make independent, currently depends on previous `acquire`
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
     const request = [
-      {resource: RESOURCES.APPLE, count: 1, requested: now}
-    ];
-    const acquisitionTtl = 30000;
-    const zones = [ZONES.ONE, ZONES.TWO];
-    const result = await resources.check(
-      {acquirerId, request, acquisitionTtl, zones});
-    assertCheckResult(result);
-  });
-
-  it.skip('should deny an acquisition with a restriction', async function() {
-    const now = Date.now();
-    const acquirerId = ACQUIRER_ID;
-    const request = [
-      {resource: RESOURCES.APPLE, count: 1, requested: now}
+      {resource: RESOURCES.ORANGE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
     const zones = [ZONES.ONE, ZONES.TWO];
     const result = await resources.acquire(
       {acquirerId, request, acquisitionTtl, zones});
-    assertCheckResult(result);
+    const expectedResult = {
+      authorized: false,
+      excessResources: [{
+        resource: RESOURCES.ORANGE,
+        count: 1
+      }],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should acquire with updated restriction', async function() {
+    // change restriction to allow additional acquisition
+    await restrictions.update({
+      restriction: {
+        zone: ZONES.ONE,
+        resource: RESOURCES.ORANGE,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 2,
+          duration: 'P30D'
+        }
+      }
+    });
+    const now = Date.now();
+    const acquirerId = ACQUIRER_ID;
+    const request = [
+      {resource: RESOURCES.ORANGE, count: 1, requested: now}
+    ];
+    const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.acquire(
+      {acquirerId, request, acquisitionTtl, zones});
+    const expectedResult = {
+      authorized: true,
+      excessResources: [],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
   });
 
   it.skip('should force-record an unauthorized acquisition', async function() {
