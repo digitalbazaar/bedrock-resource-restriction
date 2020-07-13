@@ -3,9 +3,11 @@
  */
 'use strict';
 
-const {resources} = require('bedrock-resource-restriction');
+const {resources, restrictions} = require('bedrock-resource-restriction');
 
-const {ACQUIRER_ID, RESOURCES, assertCheckResult} = require('./helpers.js');
+const {
+  ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult
+} = require('./helpers.js');
 
 describe('resources', function() {
   it('should authorize a request with no restrictions', async function() {
@@ -15,7 +17,9 @@ describe('resources', function() {
       {resource: RESOURCES.APPLE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
-    const result = await resources.check({acquirerId, request, acquisitionTtl});
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.check(
+      {acquirerId, request, acquisitionTtl, zones});
     const expectedResult = {
       authorized: true,
       excessResources: [],
@@ -31,8 +35,9 @@ describe('resources', function() {
       {resource: RESOURCES.APPLE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
     const result = await resources.acquire(
-      {acquirerId, request, acquisitionTtl});
+      {acquirerId, request, acquisitionTtl, zones});
     const expectedResult = {
       authorized: true,
       excessResources: [],
@@ -41,18 +46,52 @@ describe('resources', function() {
     assertCheckResult(result, expectedResult);
   });
 
-  it.skip('should authorize a request with a restriction', async function() {
+  it('should authorize a request with a restriction', async function() {
+    await restrictions.insert({
+      restriction: {
+        zone: ZONES.ONE,
+        resource: RESOURCES.ORANGE,
+        method: 'limitOverPeriod',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      }
+    });
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
     const request = [
-      {resource: RESOURCES.APPLE, count: 1, requested: now}
+      {resource: RESOURCES.ORANGE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
-    const result = await resources.check({acquirerId, request, acquisitionTtl});
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.check(
+      {acquirerId, request, acquisitionTtl, zones});
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: [RESOURCES.APPLE]
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should deny a request with a restriction', async function() {
+    const now = Date.now();
+    const acquirerId = ACQUIRER_ID;
+    const request = [
+      {resource: RESOURCES.ORANGE, count: 2, requested: now}
+    ];
+    const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.check(
+      {acquirerId, request, acquisitionTtl, zones});
+    const expectedResult = {
+      authorized: false,
+      excessResources: [{
+        resource: RESOURCES.ORANGE,
+        count: 1
+      }],
+      untrackedResources: []
     };
     assertCheckResult(result, expectedResult);
   });
@@ -64,8 +103,9 @@ describe('resources', function() {
       {resource: RESOURCES.APPLE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
     const result = await resources.acquire(
-      {acquirerId, request, acquisitionTtl});
+      {acquirerId, request, acquisitionTtl, zones});
     assertCheckResult(result);
   });
 
@@ -76,7 +116,9 @@ describe('resources', function() {
       {resource: RESOURCES.APPLE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
-    const result = await resources.check({acquirerId, request, acquisitionTtl});
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.check(
+      {acquirerId, request, acquisitionTtl, zones});
     assertCheckResult(result);
   });
 
@@ -87,8 +129,9 @@ describe('resources', function() {
       {resource: RESOURCES.APPLE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
     const result = await resources.acquire(
-      {acquirerId, request, acquisitionTtl});
+      {acquirerId, request, acquisitionTtl, zones});
     assertCheckResult(result);
   });
 
@@ -99,8 +142,9 @@ describe('resources', function() {
       {resource: RESOURCES.APPLE, count: 1, requested: now}
     ];
     const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
     const result = await resources.acquire(
-      {acquirerId, request, acquisitionTtl, forceAcquisition: true});
+      {acquirerId, request, acquisitionTtl, zones, forceAcquisition: true});
     assertCheckResult(result);
   });
 
