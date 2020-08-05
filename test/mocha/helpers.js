@@ -11,7 +11,8 @@ exports.ACQUIRER_ID = uuid();
 exports.RESOURCES = {
   APPLE: uuid(),
   ORANGE: uuid(),
-  KIWI: uuid()
+  KIWI: uuid(),
+  CARROT: uuid()
 };
 
 exports.ZONES = {
