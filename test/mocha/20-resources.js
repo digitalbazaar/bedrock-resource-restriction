@@ -205,7 +205,7 @@ describe('resources', function() {
     result.excessResources.should.deep.equal(expectedExcess);
   });
 
-  it('should release a acquired resources', async function() {
+  it('should release acquired resources', async function() {
     const acquirerId = ACQUIRER_ID;
     const request = [
       {resource: RESOURCES.ORANGE, count: 2}
@@ -236,5 +236,85 @@ describe('resources', function() {
       untrackedResources: []
     };
     assertCheckResult(result, expectedResult);
+  });
+
+  it('should release an early acquisition', async function() {
+    // add restriction
+    await restrictions.insert({
+      restriction: {
+        zone: ZONES.ONE,
+        resource: RESOURCES.CARROT,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 10,
+          duration: 'P30D'
+        }
+      }
+    });
+    // acquire resource at early time
+    const acquirerId = ACQUIRER_ID;
+    const zones = [ZONES.ONE];
+    const now = Date.now();
+    const acquisitionTtl = 30000;
+    let request = [
+      {resource: RESOURCES.CARROT, count: 1, requested: now - 2}
+    ];
+    let result = await resources.acquire(
+      {acquirerId, request, acquisitionTtl, zones});
+    const expectedResult = {
+      authorized: true,
+      excessResources: [],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+
+    // acquire resource at middle time
+    request = [
+      {resource: RESOURCES.CARROT, count: 1, requested: now - 1}
+    ];
+    result = await resources.acquire(
+      {acquirerId, request, acquisitionTtl, zones});
+    assertCheckResult(result, expectedResult);
+
+    // acquire resource at latest time
+    request = [
+      {resource: RESOURCES.CARROT, count: 1, requested: now}
+    ];
+    result = await resources.acquire(
+      {acquirerId, request, acquisitionTtl, zones});
+    assertCheckResult(result, expectedResult);
+
+    // release earliest resource
+    request = [
+      {resource: RESOURCES.CARROT, count: 1}
+    ];
+    result = await resources.release(
+      {acquirerId, request, acquisitionTtl});
+    should.exist(result);
+    result.should.be.an('object');
+    result.should.have.property('expires');
+    result.expires.should.be.a('number');
+    // expires result should reflect the expiration of the "latest" acquisition
+    const {expires: latestExpires} = result;
+
+    // release latest resource
+    request = [
+      {resource: RESOURCES.CARROT, count: 1, latest: true}
+    ];
+    result = await resources.release(
+      {acquirerId, request, acquisitionTtl});
+    should.exist(result);
+    result.should.be.an('object');
+    result.should.have.property('expires');
+    result.expires.should.be.a('number');
+    // expires should should now reflect the expiration of the "middle"
+    // acquisition since the latest has been removed
+    const {expires: middleExpires} = result;
+
+    // the difference between when the middle acquisition and the "latest"
+    // should be 1 per the above parameters used when acquiring them
+    const diff = latestExpires - middleExpires;
+    const expectedDiff = 1;
+    diff.should.equal(expectedDiff);
   });
 });
