@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 1.0.0 - 2020-xx-xx
+## 1.0.0 - 2020-08-22
 
 ### Added
 - Added core files.
