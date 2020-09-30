@@ -40,8 +40,8 @@
     "bedrock-tokenizer": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-digitalbazaar": "^2.4.0"
+    "eslint": "^7.10.0",
+    "eslint-config-digitalbazaar": "^2.6.1"
   },
   "directories": {
     "lib": "./lib"
