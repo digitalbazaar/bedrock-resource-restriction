@@ -27,7 +27,25 @@ describe('resources', function() {
     };
     assertCheckResult(result, expectedResult);
   });
-
+  it('should throw error if no "acquirerId" is provided', async function() {
+    const now = Date.now();
+    const request = [
+      {resource: RESOURCES.APPLE, count: 1, requested: now}
+    ];
+    const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    let result;
+    let err;
+    try {
+      result = await resources.check(
+        {request, acquisitionTtl, zones});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.message.should.equal('acquirerId (string) is required');
+  });
   it('should allow acquire on an unrestricted resource', async function() {
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
