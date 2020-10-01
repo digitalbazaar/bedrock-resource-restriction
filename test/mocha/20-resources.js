@@ -27,7 +27,8 @@ describe('resources', function() {
     };
     assertCheckResult(result, expectedResult);
   });
-  it('should throw error if no "acquirerId" is provided', async function() {
+
+  it('check should throw error if missing "acquirerId"', async function() {
     const now = Date.now();
     const request = [
       {resource: RESOURCES.APPLE, count: 1, requested: now}
@@ -46,6 +47,7 @@ describe('resources', function() {
     should.exist(err);
     err.message.should.equal('acquirerId (string) is required');
   });
+
   it('should allow acquire on an unrestricted resource', async function() {
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
@@ -130,6 +132,26 @@ describe('resources', function() {
       untrackedResources: []
     };
     assertCheckResult(result, expectedResult);
+  });
+
+  it('acquire should throw error if missing "acquirerId"', async function() {
+    const now = Date.now();
+    const request = [
+      {resource: RESOURCES.ORANGE, count: 1, requested: now}
+    ];
+    const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    let result;
+    let err;
+    try {
+      result = await resources.acquire(
+        {request, acquisitionTtl, zones});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.message.should.equal('acquirerId (string) is required');
   });
 
   it('should deny an acquire request with a restriction', async function() {
@@ -221,6 +243,24 @@ describe('resources', function() {
     result.should.have.property('excessResources');
     result.excessResources.should.be.an('array');
     result.excessResources.should.deep.equal(expectedExcess);
+  });
+
+  it('release should throw error if missing "acquirerId"', async function() {
+    const request = [
+      {resource: RESOURCES.APPLE, count: 1}
+    ];
+    const acquisitionTtl = 30000;
+    let result;
+    let err;
+    try {
+      result = await resources.release(
+        {request, acquisitionTtl});
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.message.should.equal('acquirerId (string) is required');
   });
 
   it('should release acquired resources', async function() {

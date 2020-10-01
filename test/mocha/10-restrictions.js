@@ -122,6 +122,30 @@ describe('restrictions', function() {
     result.should.deep.equal(expectedResult);
   });
 
+  it('apply should throw error if missing "acquirerId"', async function() {
+    const now = Date.now();
+    const request = [
+      {resource: RESOURCES.KIWI, count: 1, requested: now}
+    ];
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const matches = await restrictions.matchRequest({request, zones});
+    const acquired = new Map();
+    let result;
+    let err;
+    try {
+      result = await matches.restrictions[0].apply({
+        acquired,
+        request,
+        zones
+      });
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.message.should.equal('acquirerId (string) is required');
+  });
+
   it('should ignore an expired acquisition', async function() {
     const now = Date.now();
     const request = [
