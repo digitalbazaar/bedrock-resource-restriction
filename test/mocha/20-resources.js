@@ -189,6 +189,52 @@ describe('resources', function() {
     // TODO: get acquisition record and add assertions
   });
 
+  it('should acquire and then release more than acquired with excess',
+    async function() {
+      // add restriction
+      await restrictions.insert({
+        restriction: {
+          zone: ZONES.ONE,
+          resource: RESOURCES.CHERRY,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 5,
+            duration: 'P30D'
+          }
+        }
+      });
+
+      // acquire resource
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      let request = [
+        {resource: RESOURCES.CHERRY, count: 5, requested: now}
+      ];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE, ZONES.TWO];
+      const acquireResult = await resources.acquire(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedAcquireResult = {
+        authorized: true,
+        excessResources: [],
+        untrackedResources: []
+      };
+      assertCheckResult(acquireResult, expectedAcquireResult);
+
+      // release resource
+      request = [
+        {resource: RESOURCES.CHERRY, count: 6}
+      ];
+      const releaseResult = await resources.release(
+        {acquirerId, request, acquisitionTtl});
+      const expectedExcess = [{resource: RESOURCES.CHERRY, count: 1}];
+      should.exist(releaseResult);
+      releaseResult.should.be.an('object');
+      releaseResult.should.have.property('excessResources');
+      releaseResult.excessResources.should.be.an('array');
+      releaseResult.excessResources.should.deep.equal(expectedExcess);
+    });
+
   it('should fail to release a non-acquired resource', async function() {
     const acquirerId = ACQUIRER_ID;
     const request = [
