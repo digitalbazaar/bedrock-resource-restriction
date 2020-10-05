@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 1.0.1 - 2020-10-05
+
+### Changed
+- Fix bug with `excessResources` count for release.
+- Add assertions that `acquirerId` is a string.
+
 ## 1.0.0 - 2020-08-22
 
 ### Added
