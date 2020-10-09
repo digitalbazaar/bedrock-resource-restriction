@@ -1,5 +1,13 @@
 # bedrock-resource-restriction ChangeLog
 
+## 1.1.0 - 2020-10-09
+
+### Added
+- Improve documentation.
+
+### Changed
+- Update peer and test deps.
+
 ## 1.0.1 - 2020-10-05
 
 ### Changed
