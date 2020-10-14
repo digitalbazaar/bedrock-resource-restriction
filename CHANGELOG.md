@@ -1,5 +1,10 @@
 # bedrock-resource-restriction ChangeLog
 
+## 1.2.0 - 2020-10-14
+
+### Added
+- Implement `bulkInsert()` and `remove()` restrictions operations.
+
 ## 1.1.0 - 2020-10-09
 
 ### Added
