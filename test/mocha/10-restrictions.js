@@ -36,6 +36,7 @@ describe('restrictions', function() {
     should.exist(result.restriction);
     result.restriction.should.deep.equal(expectedRestriction);
   });
+
   it('should throw DuplicateError if same restriction is inserted again',
     async function() {
       let result;
@@ -280,5 +281,36 @@ describe('restrictions', function() {
     should.exist(err);
     err.name.should.equal('NotFoundError');
     err.message.should.equal('Restriction not found.');
+  });
+
+  it('should insert multiple restrictions', async function() {
+    const restrictionsList = [
+      {
+        zone: ZONES.ONE,
+        resource: RESOURCES.MANGO,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      },
+      {
+        zone: ZONES.TWO,
+        resource: RESOURCES.MANGO,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      },
+    ];
+    const result = await restrictions.bulkInsert({
+      restrictions: restrictionsList
+    });
+    should.exist(result);
+    should.exist(result[0].meta);
+    should.exist(result[1].meta);
+    result[0].restriction.should.equal(restrictionsList[0]);
+    result[1].restriction.should.equal(restrictionsList[1]);
   });
 });
