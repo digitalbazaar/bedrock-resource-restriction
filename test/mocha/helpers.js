@@ -14,7 +14,8 @@ exports.RESOURCES = {
   KIWI: uuid(),
   CARROT: uuid(),
   CHERRY: uuid(),
-  MANGO: uuid()
+  MANGO: uuid(),
+  STRAWBERRY: uuid()
 };
 
 exports.ZONES = {
