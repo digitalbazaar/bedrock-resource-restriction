@@ -39,13 +39,39 @@ describe('restrictions', function() {
 
   it('should throw DuplicateError if same restriction is inserted again',
     async function() {
-      let result;
+      const result = await restrictions.insert({
+        restriction: {
+          zone: ZONES.ONE,
+          resource: RESOURCES.STRAWBERRY,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: 'P30D'
+          }
+        }
+      });
+      const expectedRestriction = {
+        zone: ZONES.ONE,
+        resource: RESOURCES.STRAWBERRY,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      };
+      should.exist(result);
+      should.exist(result.meta);
+      should.exist(result.restriction);
+      result.restriction.should.deep.equal(expectedRestriction);
+
+      let result2;
       let err;
       try {
-        result = await restrictions.insert({
+        // inserting the same restriction again should fail
+        result2 = await restrictions.insert({
           restriction: {
             zone: ZONES.ONE,
-            resource: RESOURCES.KIWI,
+            resource: RESOURCES.STRAWBERRY,
             method: 'limitOverDuration',
             methodOptions: {
               limit: 1,
@@ -56,7 +82,7 @@ describe('restrictions', function() {
       } catch(e) {
         err = e;
       }
-      should.not.exist(result);
+      should.not.exist(result2);
       should.exist(err);
       err.name.should.equal('DuplicateError');
       err.message.should.equal('Duplicate restriction.');
@@ -270,6 +296,7 @@ describe('restrictions', function() {
     let result3;
     let err;
     try {
+      // try getting the removed restriction, this should throw a NotFoundError
       result3 = await restrictions.get({
         zone: ZONES.ONE,
         resource: RESOURCES.MANGO
