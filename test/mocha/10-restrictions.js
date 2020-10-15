@@ -36,8 +36,30 @@ describe('restrictions', function() {
     should.exist(result.restriction);
     result.restriction.should.deep.equal(expectedRestriction);
   });
-
-  // TODO: add duplicate restriction test
+  it('should throw DuplicateError if same restriction is inserted again',
+    async function() {
+      let result;
+      let err;
+      try {
+        result = await restrictions.insert({
+          restriction: {
+            zone: ZONES.ONE,
+            resource: RESOURCES.KIWI,
+            method: 'limitOverDuration',
+            methodOptions: {
+              limit: 1,
+              duration: 'P30D'
+            }
+          }
+        });
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(result);
+      should.exist(err);
+      err.name.should.equal('DuplicateError');
+      err.message.should.equal('Duplicate restriction.');
+    });
 
   it('should get a restriction', async function() {
     const result = await restrictions.get({
@@ -191,5 +213,72 @@ describe('restrictions', function() {
     };
     should.exist(result);
     result.should.deep.equal(expectedResult);
+  });
+
+  it('should remove a restriction from the database', async function() {
+    // create restriction
+    const result = await restrictions.insert({
+      restriction: {
+        zone: ZONES.ONE,
+        resource: RESOURCES.MANGO,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      }
+    });
+    const expectedRestriction = {
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO,
+      method: 'limitOverDuration',
+      methodOptions: {
+        limit: 1,
+        duration: 'P30D'
+      }
+    };
+    should.exist(result);
+    should.exist(result.meta);
+    should.exist(result.restriction);
+    result.restriction.should.deep.equal(expectedRestriction);
+
+    // get restriction
+    const result1 = await restrictions.get({
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO
+    });
+    const expectedRestriction1 = {
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO,
+      method: 'limitOverDuration',
+      methodOptions: {
+        limit: 1,
+        duration: 'P30D'
+      }
+    };
+    should.exist(result1);
+    should.exist(result1.meta);
+    should.exist(result1.restriction);
+    result.restriction.should.deep.equal(expectedRestriction1);
+
+    // remove the restriction
+    await restrictions.remove({
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO
+    });
+    let result3;
+    let err;
+    try {
+      result3 = await restrictions.get({
+        zone: ZONES.ONE,
+        resource: RESOURCES.MANGO
+      });
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result3);
+    should.exist(err);
+    err.name.should.equal('NotFoundError');
+    err.message.should.equal('Restriction not found.');
   });
 });
