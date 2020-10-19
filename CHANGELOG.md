@@ -1,5 +1,10 @@
 # bedrock-resource-restriction ChangeLog
 
+## 1.3.0 - 2020-10-19
+
+### Added
+- Improve `DuplicateError` handling in the `bulkInsert` API.
+
 ## 1.2.0 - 2020-10-14
 
 ### Added
