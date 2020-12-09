@@ -1,5 +1,19 @@
 # bedrock-resource-restriction ChangeLog
 
+## 1.3.1 - 2020-12-xx
+
+### Fixed
+- Ensure existing record's data is not mutated when applying requests.
+- Better handle duplicate `upsert` errors that surfaced from a bug
+  that was erroneously mutating existing record data. When existing
+  record data does not match during an upsert a duplicate error
+  occurs -- this is now treated the same way as a non-matching
+  query instead of as a duplicate error.
+- Do not `upsert` when releasing resources, only when acquiring.
+- Remove old comparison code in the event that no update occurred
+  as the update includes setting `meta.updated` which should 
+  eliminate the case where there was no actual change.
+
 ## 1.3.0 - 2020-10-19
 
 ### Added
