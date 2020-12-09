@@ -275,6 +275,64 @@ describe('resources', function() {
       releaseResult.excessResources.should.deep.equal(expectedExcess);
     });
 
+  it('should acquire and then release fewer than acquired', async function() {
+    // add restriction
+    await restrictions.insert({
+      restriction: {
+        zone: ZONES.ONE,
+        resource: RESOURCES.CUCUMBER,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 5,
+          duration: 'P30D'
+        }
+      }
+    });
+
+    // acquire resource
+    const now = Date.now();
+    const acquirerId = ACQUIRER_ID;
+    let request = [
+      {resource: RESOURCES.CUCUMBER, count: 5, requested: now}
+    ];
+    const acquisitionTtl = 30000;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const acquireResult = await resources.acquire(
+      {acquirerId, request, acquisitionTtl, zones});
+    const expectedAcquireResult = {
+      authorized: true,
+      excessResources: [],
+      untrackedResources: []
+    };
+    assertCheckResult(acquireResult, expectedAcquireResult);
+
+    // release resource
+    request = [
+      {resource: RESOURCES.CUCUMBER, count: 1}
+    ];
+    let releaseResult = await resources.release(
+      {acquirerId, request, acquisitionTtl});
+    let expectedExcess = [];
+    should.exist(releaseResult);
+    releaseResult.should.be.an('object');
+    releaseResult.should.have.property('excessResources');
+    releaseResult.excessResources.should.be.an('array');
+    releaseResult.excessResources.should.deep.equal(expectedExcess);
+
+    // release remaining resources and check for excess
+    request = [
+      {resource: RESOURCES.CUCUMBER, count: 5}
+    ];
+    releaseResult = await resources.release(
+      {acquirerId, request, acquisitionTtl});
+    expectedExcess = [{resource: RESOURCES.CUCUMBER, count: 1}];
+    should.exist(releaseResult);
+    releaseResult.should.be.an('object');
+    releaseResult.should.have.property('excessResources');
+    releaseResult.excessResources.should.be.an('array');
+    releaseResult.excessResources.should.deep.equal(expectedExcess);
+  });
+
   it('should fail to release a non-acquired resource', async function() {
     const acquirerId = ACQUIRER_ID;
     const request = [
