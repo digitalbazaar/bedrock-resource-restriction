@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 1.3.1 - 2020-12-xx
+## 1.3.1 - 2020-12-10
 
 ### Fixed
 - Ensure existing record's data is not mutated when applying requests.
