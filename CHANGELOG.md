@@ -1,5 +1,10 @@
 # bedrock-resource-restriction ChangeLog
 
+## 1.4.0 - 2021-01-??
+
+### Added
+- Implement support for multiple and different durations.
+
 ## 1.3.1 - 2020-12-10
 
 ### Fixed
@@ -11,7 +16,7 @@
   query instead of as a duplicate error.
 - Do not `upsert` when releasing resources, only when acquiring.
 - Remove old comparison code in the event that no update occurred
-  as the update includes setting `meta.updated` which should 
+  as the update includes setting `meta.updated` which should
   eliminate the case where there was no actual change.
 
 ## 1.3.0 - 2020-10-19
