@@ -88,6 +88,55 @@ describe('restrictions', function() {
       err.message.should.equal('Duplicate restriction.');
     });
 
+  it('should throw ValidationError with no duration', async function() {
+    let result;
+    let err;
+    try {
+      // inserting the same restriction again should fail
+      result = await restrictions.insert({
+        restriction: {
+          zone: ZONES.ONE,
+          resource: RESOURCES.STRAWBERRY,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1
+          }
+        }
+      });
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.name.should.equal('ValidationError');
+    err.message.should.equal('Duration undefined is not valid.');
+  });
+
+  it('should throw ValidationError if duration is not valid', async function() {
+    let result;
+    let err;
+    try {
+      // inserting the same restriction again should fail
+      result = await restrictions.insert({
+        restriction: {
+          zone: ZONES.ONE,
+          resource: RESOURCES.STRAWBERRY,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: 'X123'
+          }
+        }
+      });
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.name.should.equal('ValidationError');
+    err.message.should.equal('Duration X123 is not valid.');
+  });
+
   it('should get a restriction', async function() {
     const getRestriction = await restrictions.get({
       zone: ZONES.ONE,

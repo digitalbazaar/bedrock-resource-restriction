@@ -176,6 +176,54 @@ describe('resources', function() {
     assertCheckResult(result, expectedResult);
   });
 
+  it('should deny an acquire request with multiple time restrictions',
+    async function() {
+      // add monthly restriction
+      await restrictions.insert({
+        restriction: {
+          zone: ZONES.ONE,
+          resource: RESOURCES.LIME,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 8,
+            duration: 'P30D'
+          }
+        }
+      });
+      // add weekly restriction
+      await restrictions.insert({
+        restriction: {
+          zone: ZONES.ONE,
+          resource: RESOURCES.LIME,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 2,
+            duration: 'P7D'
+          }
+        }
+      });
+
+      // acquire resource
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      const request = [
+        {resource: RESOURCES.LIME, count: 3, requested: now}
+      ];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE];
+      const result = await resources.acquire(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedResult = {
+        authorized: false,
+        excessResources: [{
+          resource: RESOURCES.LIME,
+          count: 1
+        }],
+        untrackedResources: []
+      };
+      assertCheckResult(result, expectedResult);
+    });
+
   it('should acquire with updated restriction', async function() {
     // change restriction to allow additional acquisition
     await restrictions.update({
