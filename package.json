@@ -27,8 +27,10 @@
   "dependencies": {
     "assert-plus": "^1.0.0",
     "canonicalize": "^1.0.1",
+    "iso8601-duration": "^1.3.0",
     "isomorphic-webcrypto": "^2.3.6",
     "minimal-cipher": "^1.0.0",
+    "moment": "^2.29.1",
     "webkms-client": "^2.1.0"
   },
   "peerDependencies": {
