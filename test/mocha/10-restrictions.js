@@ -88,7 +88,38 @@ describe('restrictions', function() {
       err.message.should.equal('Duplicate restriction.');
     });
 
-  it('should throw ValidationError with no duration', async function() {
+  it('should not throw DuplicateError if duration is different',
+    async function() {
+      await restrictions.insert({
+        restriction: {
+          zone: ZONES.TWO,
+          resource: RESOURCES.STRAWBERRY,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: 'P30D'
+          }
+        }
+      });
+      // inserting the same restriction with different duration should succeed
+      const secondRestriction = await restrictions.insert({
+        restriction: {
+          zone: ZONES.TWO,
+          resource: RESOURCES.STRAWBERRY,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: 'P7D'
+          }
+        }
+      });
+      should.exist(secondRestriction);
+      should.exist(secondRestriction.meta);
+      should.exist(secondRestriction.restriction);
+      secondRestriction.restriction.methodOptions.duration.should.equal('P7D');
+    });
+
+  it('should throw SyntaxError with no duration', async function() {
     let result;
     let err;
     try {
@@ -108,8 +139,11 @@ describe('restrictions', function() {
     }
     should.not.exist(result);
     should.exist(err);
-    err.name.should.equal('ValidationError');
-    err.message.should.equal('Duration undefined is not valid.');
+    err.name.should.equal('SyntaxError');
+    err.message.should.equal('Validation error.');
+    err.errors[0].message.should.equal(
+      'should have required property \'duration\''
+    );
   });
 
   it('should throw ValidationError if duration is not valid', async function() {
@@ -134,7 +168,7 @@ describe('restrictions', function() {
     should.not.exist(result);
     should.exist(err);
     err.name.should.equal('ValidationError');
-    err.message.should.equal('Duration X123 is not valid.');
+    err.message.should.equal('Duration \'X123\' is not valid.');
   });
 
   it('should get a restriction', async function() {
