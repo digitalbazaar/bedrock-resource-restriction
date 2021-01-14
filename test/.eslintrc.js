@@ -6,8 +6,5 @@ module.exports = {
     node: true,
     mocha: true
   },
-  extends: [
-    'digitalbazaar'
-  ],
   ignorePatterns: ['node_modules/']
 };
