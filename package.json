@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/digitalbazaar/bedrock-resource-restriction",
   "dependencies": {
+    "ajv": "^7.0.3",
     "assert-plus": "^1.0.0",
     "canonicalize": "^1.0.1",
     "iso8601-duration": "^1.3.0",
@@ -48,5 +49,8 @@
   },
   "directories": {
     "lib": "./lib"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
