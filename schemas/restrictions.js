@@ -2,6 +2,8 @@
  * Copyright (c) 2021 Digital Bazaar, Inc. All rights reserved.
  */
 
+import {pattern} from 'iso8601-duration';
+
 export default {
   restriction: {title: 'restriction',
     type: 'object',
@@ -29,8 +31,7 @@ export default {
           },
           duration: {
             type: 'string',
-            // eslint-disable-next-line
-            pattern: 'P(?:(\d+(?:[\.,]\d+)?W)|(\d+(?:[\.,]\d+)?Y)?(\d+(?:[\.,]\d+)?M)?(\d+(?:[\.,]\d+)?D)?(?:T(\d+(?:[\.,]\d+)?H)?(\d+(?:[\.,]\d+)?M)?(\d+(?:[\.,]\d+)?S)?)?)'
+            pattern: new RegExp(pattern).toString().replace('/', '')
           }
         }
       }
