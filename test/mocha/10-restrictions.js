@@ -167,8 +167,9 @@ describe('restrictions', function() {
     }
     should.not.exist(result);
     should.exist(err);
-    err.name.should.equal('ValidationError');
-    err.message.should.equal('Duration \'X123\' is not valid.');
+    err.name.should.equal('SyntaxError');
+    err.message.should.equal('Validation error.');
+    err.errors[0].message.should.include('should match pattern "P(');
   });
 
   it('should get a restriction', async function() {

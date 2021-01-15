@@ -25,10 +25,12 @@ export default {
         properties: {
           limit: {
             type: 'integer',
-            minimum: 0
+            minimum: 1
           },
           duration: {
-            type: 'string'
+            type: 'string',
+            // eslint-disable-next-line
+            pattern: 'P(?:(\d+(?:[\.,]\d+)?W)|(\d+(?:[\.,]\d+)?Y)?(\d+(?:[\.,]\d+)?M)?(\d+(?:[\.,]\d+)?D)?(?:T(\d+(?:[\.,]\d+)?H)?(\d+(?:[\.,]\d+)?M)?(\d+(?:[\.,]\d+)?S)?)?)'
           }
         }
       }
