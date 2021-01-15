@@ -2,8 +2,6 @@
  * Copyright (c) 2021 Digital Bazaar, Inc. All rights reserved.
  */
 
-import {pattern} from 'iso8601-duration';
-
 export default {
   restriction: {title: 'restriction',
     type: 'object',
