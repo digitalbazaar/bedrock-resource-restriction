@@ -1,6 +1,9 @@
 /*!
  * Copyright (c) 2021 Digital Bazaar, Inc. All rights reserved.
  */
+import {pattern} from 'iso8601-duration';
+const iso8601Regex =
+  pattern.toString().substring(1, pattern.toString().length - 1);
 
 export default {
   restriction: {title: 'restriction',
@@ -29,9 +32,7 @@ export default {
           },
           duration: {
             type: 'string',
-            pattern: `P(?:(\d+(?:[\.,]\d+)?W)|(\d+(?:[\.,]\d+)?Y)?(\d+(?:[\.,` +
-            `]\d+)?M)?(\d+(?:[\.,]\d+)?D)?(?:T(\d+(?:[\.,]\d+)?H)?(\d+(?:[\.` +
-            `,]\d+)?M)?(\d+(?:[\.,]\d+)?S)?)?)`
+            pattern: iso8601Regex
           }
         }
       }
