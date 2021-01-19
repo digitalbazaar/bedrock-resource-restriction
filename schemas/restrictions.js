@@ -2,8 +2,11 @@
  * Copyright (c) 2021 Digital Bazaar, Inc. All rights reserved.
  */
 import {pattern} from 'iso8601-duration';
+// convert Regex to a string
+const iso8601RegexString = pattern.toString();
+// remove leading and trailing slashes
 const iso8601Regex =
-  pattern.toString().substring(1, pattern.toString().length - 1);
+  iso8601RegexString.substring(1, iso8601RegexString.length - 1);
 
 export default {
   restriction: {title: 'restriction',
