@@ -6,7 +6,7 @@
 const {restrictions} = require('bedrock-resource-restriction');
 
 const {
-  ACQUIRER_ID, RESOURCES, ZONES, assertResourceRestriction
+  ACQUIRER_ID, RESOURCES, ZONES, assertResourceRestriction, createId
 } = require('./helpers.js');
 
 describe('restrictions', function() {
@@ -31,6 +31,7 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
+    expectedRestriction.id = createId(expectedRestriction);
     should.exist(actualRestriction);
     should.exist(actualRestriction.meta);
     should.exist(actualRestriction.restriction);
@@ -59,6 +60,7 @@ describe('restrictions', function() {
           duration: 'P30D'
         }
       };
+      expectedRestriction.id = createId(expectedRestriction);
       should.exist(actualRestriction);
       should.exist(actualRestriction.meta);
       should.exist(actualRestriction.restriction);
@@ -186,6 +188,7 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
+    expectedRestriction.id = createId(expectedRestriction);
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);
@@ -348,6 +351,7 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
+    expectedRestriction.id = createId(expectedRestriction);
     should.exist(actualRestriction);
     should.exist(actualRestriction.meta);
     should.exist(actualRestriction.restriction);
@@ -357,19 +361,10 @@ describe('restrictions', function() {
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
     });
-    const expectedRestriction1 = {
-      zone: ZONES.ONE,
-      resource: RESOURCES.MANGO,
-      method: 'limitOverDuration',
-      methodOptions: {
-        limit: 1,
-        duration: 'P30D'
-      }
-    };
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);
-    getRestriction.restriction.should.deep.equal(expectedRestriction1);
+    getRestriction.restriction.should.deep.equal(expectedRestriction);
 
     // remove the restriction
     await restrictions.remove({
@@ -417,6 +412,8 @@ describe('restrictions', function() {
     const result = await restrictions.bulkInsert({
       restrictions: restrictionsList
     });
+    restrictionsList[0].id = createId(restrictionsList[0]);
+    restrictionsList[1].id = createId(restrictionsList[1]);
     should.exist(result);
     should.exist(result[0].meta);
     should.exist(result[1].meta);
