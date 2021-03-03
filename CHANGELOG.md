@@ -1,8 +1,9 @@
 # bedrock-resource-restriction ChangeLog
 
-## 1.4.0 - 2021-01-??
+## 2.0.0 - 2021-03-xx
 
 ### Added
+- **BREAKING**: Ids are now required when inserting restrictions.
 - Implement support for multiple and different durations.
 
 ## 1.3.1 - 2020-12-10

@@ -6,7 +6,7 @@
 const {resources, restrictions} = require('bedrock-resource-restriction');
 
 const {
-  ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult
+  ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult, generateId
 } = require('./helpers.js');
 
 describe('resources', function() {
@@ -67,8 +67,10 @@ describe('resources', function() {
   });
 
   it('should authorize a request with a restriction', async function() {
+    const id = await generateId();
     await restrictions.insert({
       restriction: {
+        id,
         zone: ZONES.ONE,
         resource: RESOURCES.ORANGE,
         method: 'limitOverDuration',
@@ -179,8 +181,10 @@ describe('resources', function() {
   it('should deny an acquire request with multiple time restrictions',
     async function() {
       // add monthly restriction
+      const monthId = await generateId();
       await restrictions.insert({
         restriction: {
+          id: monthId,
           zone: ZONES.ONE,
           resource: RESOURCES.LIME,
           method: 'limitOverDuration',
@@ -191,8 +195,10 @@ describe('resources', function() {
         }
       });
       // add weekly restriction
+      const weekId = await generateId();
       await restrictions.insert({
         restriction: {
+          id: weekId,
           zone: ZONES.ONE,
           resource: RESOURCES.LIME,
           method: 'limitOverDuration',
@@ -280,8 +286,10 @@ describe('resources', function() {
   it('should acquire and then release more than acquired with excess',
     async function() {
       // add restriction
+      const id = await generateId();
       await restrictions.insert({
         restriction: {
+          id,
           zone: ZONES.ONE,
           resource: RESOURCES.CHERRY,
           method: 'limitOverDuration',
@@ -325,8 +333,10 @@ describe('resources', function() {
 
   it('should acquire and then release fewer than acquired', async function() {
     // add restriction
+    const id = await generateId();
     await restrictions.insert({
       restriction: {
+        id,
         zone: ZONES.ONE,
         resource: RESOURCES.CUCUMBER,
         method: 'limitOverDuration',
@@ -450,8 +460,10 @@ describe('resources', function() {
 
   it('should release an early acquisition', async function() {
     // add restriction
+    const id = await generateId();
     await restrictions.insert({
       restriction: {
+        id,
         zone: ZONES.ONE,
         resource: RESOURCES.CARROT,
         method: 'limitOverDuration',
