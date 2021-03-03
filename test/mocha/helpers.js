@@ -5,17 +5,9 @@
 
 const database = require('bedrock-mongodb');
 const uuid = require('uuid-random');
-const crypto = require('crypto');
 
-exports.createId = function createId(restriction) {
-  let id = `${restriction.zone}${restriction.resource}${restriction.method}`;
-
-  if(restriction.method === 'limitOverDuration' &&
-  restriction.methodOptions && restriction.methodOptions.duration) {
-    id = `${id}${restriction.methodOptions.duration}`;
-  }
-
-  return crypto.createHash('sha256').update(id).digest('base64');
+exports.generateId = async () => {
+  return uuid();
 };
 
 exports.ACQUIRER_ID = uuid();

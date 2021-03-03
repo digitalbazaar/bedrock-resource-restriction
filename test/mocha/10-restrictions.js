@@ -6,13 +6,15 @@
 const {restrictions} = require('bedrock-resource-restriction');
 
 const {
-  ACQUIRER_ID, RESOURCES, ZONES, assertResourceRestriction, createId
+  ACQUIRER_ID, RESOURCES, ZONES, assertResourceRestriction, generateId
 } = require('./helpers.js');
 
 describe('restrictions', function() {
   it('should insert a restriction', async function() {
+    const id = await generateId();
     const actualRestriction = await restrictions.insert({
       restriction: {
+        id,
         zone: ZONES.ONE,
         resource: RESOURCES.KIWI,
         method: 'limitOverDuration',
@@ -23,6 +25,7 @@ describe('restrictions', function() {
       }
     });
     const expectedRestriction = {
+      id,
       zone: ZONES.ONE,
       resource: RESOURCES.KIWI,
       method: 'limitOverDuration',
@@ -31,17 +34,42 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
-    expectedRestriction.id = createId(expectedRestriction);
     should.exist(actualRestriction);
     should.exist(actualRestriction.meta);
     should.exist(actualRestriction.restriction);
     actualRestriction.restriction.should.deep.equal(expectedRestriction);
   });
 
-  it('should throw DuplicateError if same restriction is inserted again',
+  it('should throw ValidationError with no id', async function() {
+    let result;
+    let err;
+    try {
+      result = await restrictions.insert({
+        restriction: {
+          zone: ZONES.ONE,
+          resource: RESOURCES.KIWI,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: 'P30D'
+          }
+        }
+      });
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(result);
+    should.exist(err);
+    err.name.should.equal('ValidationError');
+    err.message.should.equal('Id is required.');
+  });
+
+  it('should throw DuplicateError if restriction with same id is inserted',
     async function() {
+      const id = await generateId();
       const actualRestriction = await restrictions.insert({
         restriction: {
+          id,
           zone: ZONES.ONE,
           resource: RESOURCES.STRAWBERRY,
           method: 'limitOverDuration',
@@ -52,6 +80,7 @@ describe('restrictions', function() {
         }
       });
       const expectedRestriction = {
+        id,
         zone: ZONES.ONE,
         resource: RESOURCES.STRAWBERRY,
         method: 'limitOverDuration',
@@ -60,7 +89,6 @@ describe('restrictions', function() {
           duration: 'P30D'
         }
       };
-      expectedRestriction.id = createId(expectedRestriction);
       should.exist(actualRestriction);
       should.exist(actualRestriction.meta);
       should.exist(actualRestriction.restriction);
@@ -72,6 +100,7 @@ describe('restrictions', function() {
         // inserting the same restriction again should fail
         result = await restrictions.insert({
           restriction: {
+            id,
             zone: ZONES.ONE,
             resource: RESOURCES.STRAWBERRY,
             method: 'limitOverDuration',
@@ -90,10 +119,12 @@ describe('restrictions', function() {
       err.message.should.equal('Duplicate restriction.');
     });
 
-  it('should not throw DuplicateError if duration is different',
+  it('should not throw DuplicateError if id is different',
     async function() {
+      const id = await generateId();
       await restrictions.insert({
         restriction: {
+          id,
           zone: ZONES.TWO,
           resource: RESOURCES.STRAWBERRY,
           method: 'limitOverDuration',
@@ -103,58 +134,34 @@ describe('restrictions', function() {
           }
         }
       });
-      // inserting the same restriction with different duration should succeed
+      // inserting the same restriction with different id should succeed
+      const secondId = await generateId();
       const secondRestriction = await restrictions.insert({
         restriction: {
+          id: secondId,
           zone: ZONES.TWO,
           resource: RESOURCES.STRAWBERRY,
           method: 'limitOverDuration',
           methodOptions: {
             limit: 1,
-            duration: 'P7D'
+            duration: 'P30D'
           }
         }
       });
       should.exist(secondRestriction);
       should.exist(secondRestriction.meta);
       should.exist(secondRestriction.restriction);
-      secondRestriction.restriction.methodOptions.duration.should.equal('P7D');
+      secondRestriction.restriction.methodOptions.duration.should.equal('P30D');
     });
-
-  it('should throw SyntaxError with no duration', async function() {
-    let result;
-    let err;
-    try {
-      // inserting the same restriction again should fail
-      result = await restrictions.insert({
-        restriction: {
-          zone: ZONES.ONE,
-          resource: RESOURCES.STRAWBERRY,
-          method: 'limitOverDuration',
-          methodOptions: {
-            limit: 1
-          }
-        }
-      });
-    } catch(e) {
-      err = e;
-    }
-    should.not.exist(result);
-    should.exist(err);
-    err.name.should.equal('SyntaxError');
-    err.message.should.equal('Validation error.');
-    err.errors[0].message.should.equal(
-      'should have required property \'duration\''
-    );
-  });
 
   it('should throw ValidationError if duration is not valid', async function() {
     let result;
     let err;
+    const id = await generateId();
     try {
-      // inserting the same restriction again should fail
       result = await restrictions.insert({
         restriction: {
+          id,
           zone: ZONES.ONE,
           resource: RESOURCES.STRAWBERRY,
           method: 'limitOverDuration',
@@ -169,9 +176,8 @@ describe('restrictions', function() {
     }
     should.not.exist(result);
     should.exist(err);
-    err.name.should.equal('SyntaxError');
-    err.message.should.equal('Validation error.');
-    err.errors[0].message.should.include('should match pattern "P(');
+    err.name.should.equal('ValidationError');
+    err.message.should.equal('Duration "X123" is not valid.');
   });
 
   it('should get a restriction', async function() {
@@ -188,10 +194,11 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
-    expectedRestriction.id = createId(expectedRestriction);
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);
+    should.exist(getRestriction.restriction.id);
+    expectedRestriction.id = getRestriction.restriction.id;
     getRestriction.restriction.should.deep.equal(expectedRestriction);
   });
 
@@ -331,8 +338,10 @@ describe('restrictions', function() {
 
   it('should remove a restriction from the database', async function() {
     // create restriction
+    const id = await generateId();
     const actualRestriction = await restrictions.insert({
       restriction: {
+        id,
         zone: ZONES.ONE,
         resource: RESOURCES.MANGO,
         method: 'limitOverDuration',
@@ -343,6 +352,7 @@ describe('restrictions', function() {
       }
     });
     const expectedRestriction = {
+      id,
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO,
       method: 'limitOverDuration',
@@ -351,7 +361,6 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
-    expectedRestriction.id = createId(expectedRestriction);
     should.exist(actualRestriction);
     should.exist(actualRestriction.meta);
     should.exist(actualRestriction.restriction);
@@ -412,8 +421,6 @@ describe('restrictions', function() {
     const result = await restrictions.bulkInsert({
       restrictions: restrictionsList
     });
-    restrictionsList[0].id = createId(restrictionsList[0]);
-    restrictionsList[1].id = createId(restrictionsList[1]);
     should.exist(result);
     should.exist(result[0].meta);
     should.exist(result[1].meta);
