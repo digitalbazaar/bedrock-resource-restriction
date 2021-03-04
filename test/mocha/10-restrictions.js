@@ -40,7 +40,7 @@ describe('restrictions', function() {
     actualRestriction.restriction.should.deep.equal(expectedRestriction);
   });
 
-  it('should throw ValidationError with no id', async function() {
+  it('should throw error with no id', async function() {
     let result;
     let err;
     try {
@@ -60,8 +60,8 @@ describe('restrictions', function() {
     }
     should.not.exist(result);
     should.exist(err);
-    err.name.should.equal('ValidationError');
-    err.message.should.equal('Id is required.');
+    err.name.should.equal('TypeError');
+    err.message.should.equal('"restriction.id" is required.');
   });
 
   it('should throw DuplicateError if restriction with same id is inserted',
@@ -153,32 +153,6 @@ describe('restrictions', function() {
       should.exist(secondRestriction.restriction);
       secondRestriction.restriction.methodOptions.duration.should.equal('P30D');
     });
-
-  it('should throw ValidationError if duration is not valid', async function() {
-    let result;
-    let err;
-    const id = await generateId();
-    try {
-      result = await restrictions.insert({
-        restriction: {
-          id,
-          zone: ZONES.ONE,
-          resource: RESOURCES.STRAWBERRY,
-          method: 'limitOverDuration',
-          methodOptions: {
-            limit: 1,
-            duration: 'X123'
-          }
-        }
-      });
-    } catch(e) {
-      err = e;
-    }
-    should.not.exist(result);
-    should.exist(err);
-    err.name.should.equal('ValidationError');
-    err.message.should.equal('Duration "X123" is not valid.');
-  });
 
   it('should get a restriction', async function() {
     const getRestriction = await restrictions.get({
@@ -398,8 +372,11 @@ describe('restrictions', function() {
   });
 
   it('should insert multiple restrictions', async function() {
+    const idOne = await generateId();
+    const idTwo = await generateId();
     const restrictionsList = [
       {
+        id: idOne,
         zone: ZONES.ONE,
         resource: RESOURCES.MANGO,
         method: 'limitOverDuration',
@@ -409,6 +386,7 @@ describe('restrictions', function() {
         }
       },
       {
+        id: idTwo,
         zone: ZONES.TWO,
         resource: RESOURCES.MANGO,
         method: 'limitOverDuration',
