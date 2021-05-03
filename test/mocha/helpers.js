@@ -21,6 +21,7 @@ exports.RESOURCES = {
   MANGO: uuid(),
   STRAWBERRY: uuid(),
   CUCUMBER: uuid(),
+  ASPARAGUS: uuid(),
   LIME: uuid()
 };
 

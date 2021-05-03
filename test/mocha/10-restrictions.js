@@ -155,7 +155,40 @@ describe('restrictions', function() {
     });
 
   it('should get a restriction', async function() {
-    const getRestriction = await restrictions.get({
+    const id = await generateId();
+    await restrictions.insert({
+      restriction: {
+        id,
+        zone: ZONES.TWO,
+        resource: RESOURCES.STRAWBERRY,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      }
+    });
+    const getRestriction = await restrictions.getById({id});
+    const expectedRestriction = {
+      id,
+      zone: ZONES.TWO,
+      resource: RESOURCES.STRAWBERRY,
+      method: 'limitOverDuration',
+      methodOptions: {
+        limit: 1,
+        duration: 'P30D'
+      }
+    };
+    should.exist(getRestriction);
+    should.exist(getRestriction.meta);
+    should.exist(getRestriction.restriction);
+    should.exist(getRestriction.restriction.id);
+    expectedRestriction.id = getRestriction.restriction.id;
+    getRestriction.restriction.should.deep.equal(expectedRestriction);
+  });
+
+  it('should get a restriction by id', async function() {
+    const getRestrictions = await restrictions.get({
       zone: ZONES.ONE,
       resource: RESOURCES.KIWI
     });
@@ -168,6 +201,7 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
+    const getRestriction = getRestrictions[0];
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);
@@ -340,10 +374,11 @@ describe('restrictions', function() {
     should.exist(actualRestriction.restriction);
     actualRestriction.restriction.should.deep.equal(expectedRestriction);
 
-    const getRestriction = await restrictions.get({
+    const getRestrictions = await restrictions.get({
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
     });
+    const getRestriction = getRestrictions[0];
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);
@@ -354,6 +389,65 @@ describe('restrictions', function() {
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
     });
+    let getRestriction2;
+    let err;
+    try {
+      // try getting the removed restriction, this should throw a NotFoundError
+      getRestriction2 = await restrictions.get({
+        zone: ZONES.ONE,
+        resource: RESOURCES.MANGO
+      });
+    } catch(e) {
+      err = e;
+    }
+    should.not.exist(getRestriction2);
+    should.exist(err);
+    err.name.should.equal('NotFoundError');
+    err.message.should.equal('Restriction not found.');
+  });
+
+  it('should remove a restriction from the database by id', async function() {
+    // create restriction
+    const id = await generateId();
+    const actualRestriction = await restrictions.insert({
+      restriction: {
+        id,
+        zone: ZONES.ONE,
+        resource: RESOURCES.MANGO,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      }
+    });
+    const expectedRestriction = {
+      id,
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO,
+      method: 'limitOverDuration',
+      methodOptions: {
+        limit: 1,
+        duration: 'P30D'
+      }
+    };
+    should.exist(actualRestriction);
+    should.exist(actualRestriction.meta);
+    should.exist(actualRestriction.restriction);
+    actualRestriction.restriction.should.deep.equal(expectedRestriction);
+
+    const getRestrictions = await restrictions.get({
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO
+    });
+    const getRestriction = getRestrictions[0];
+    should.exist(getRestriction);
+    should.exist(getRestriction.meta);
+    should.exist(getRestriction.restriction);
+    getRestriction.restriction.should.deep.equal(expectedRestriction);
+
+    // remove the restriction
+    await restrictions.removeById({id});
     let getRestriction2;
     let err;
     try {

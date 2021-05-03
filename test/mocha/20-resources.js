@@ -231,11 +231,25 @@ describe('resources', function() {
     });
 
   it('should acquire with updated restriction', async function() {
+    const id = await generateId();
+    await restrictions.insert({
+      restriction: {
+        id,
+        zone: ZONES.ONE,
+        resource: RESOURCES.ASPARAGUS,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'P30D'
+        }
+      }
+    });
     // change restriction to allow additional acquisition
     await restrictions.update({
       restriction: {
+        id,
         zone: ZONES.ONE,
-        resource: RESOURCES.ORANGE,
+        resource: RESOURCES.ASPARAGUS,
         method: 'limitOverDuration',
         methodOptions: {
           limit: 2,
@@ -246,7 +260,7 @@ describe('resources', function() {
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
     const request = [
-      {resource: RESOURCES.ORANGE, count: 1, requested: now}
+      {resource: RESOURCES.ASPARAGUS, count: 2, requested: now}
     ];
     const acquisitionTtl = 30000;
     const zones = [ZONES.ONE, ZONES.TWO];

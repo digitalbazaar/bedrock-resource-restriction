@@ -1,5 +1,13 @@
 # bedrock-resource-restriction ChangeLog
 
+## 3.0.0 - 2021-XX-XX
+
+### Changed
+- **BREAKING**: `restrictions.get` now returns an array instead of an object.
+
+### Added
+- Added `getById` and `removeById` to `restrictions`.
+
 ## 2.0.0 - 2021-03-16
 
 ### Added
