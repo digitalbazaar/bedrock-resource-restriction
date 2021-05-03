@@ -154,7 +154,7 @@ describe('restrictions', function() {
       secondRestriction.restriction.methodOptions.duration.should.equal('P30D');
     });
 
-  it('should get a restriction', async function() {
+  it('should get a restriction by id', async function() {
     const id = await generateId();
     await restrictions.insert({
       restriction: {
@@ -187,7 +187,7 @@ describe('restrictions', function() {
     getRestriction.restriction.should.deep.equal(expectedRestriction);
   });
 
-  it('should get a restriction by id', async function() {
+  it('should get a restriction', async function() {
     const getRestrictions = await restrictions.get({
       zone: ZONES.ONE,
       resource: RESOURCES.KIWI
@@ -201,7 +201,7 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
-    const getRestriction = getRestrictions[0];
+    const getRestriction = getRestrictions.restrictions[0];
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);
@@ -378,7 +378,7 @@ describe('restrictions', function() {
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
     });
-    const getRestriction = getRestrictions[0];
+    const getRestriction = getRestrictions.restrictions[0];
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);
@@ -440,7 +440,7 @@ describe('restrictions', function() {
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
     });
-    const getRestriction = getRestrictions[0];
+    const getRestriction = getRestrictions.restrictions[0];
     should.exist(getRestriction);
     should.exist(getRestriction.meta);
     should.exist(getRestriction.restriction);

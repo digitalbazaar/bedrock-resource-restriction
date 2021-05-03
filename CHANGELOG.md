@@ -3,7 +3,8 @@
 ## 3.0.0 - 2021-XX-XX
 
 ### Changed
-- **BREAKING**: `restrictions.get` now returns an array instead of an object.
+- **BREAKING**: `restrictions.get` now returns the `restrictions` property
+  with an array of all restrictions matching the `zone` and `resource`.
 
 ### Added
 - Added `getById` and `removeById` to `restrictions`.
