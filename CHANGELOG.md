@@ -3,11 +3,11 @@
 ## 3.0.0 - 2021-XX-XX
 
 ### Changed
-- **BREAKING**: `restrictions.get` now returns the `restrictions` property
-  with an array of all restrictions matching the `zone` and `resource`.
+- **BREAKING**: `restrictions.get()` now takes an `id` parameter, instead of
+  `zone` and `resource`.
 
 ### Added
-- Added `getById` and `removeById` to `restrictions`.
+- Added `getAll()` and `removeById()` to `restrictions`.
 
 ## 2.0.0 - 2021-03-16
 
