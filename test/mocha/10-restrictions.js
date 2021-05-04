@@ -168,7 +168,7 @@ describe('restrictions', function() {
         }
       }
     });
-    const getRestriction = await restrictions.getById({id});
+    const getRestriction = await restrictions.get({id});
     const expectedRestriction = {
       id,
       zone: ZONES.TWO,
@@ -188,7 +188,7 @@ describe('restrictions', function() {
   });
 
   it('should get a restriction', async function() {
-    const getRestrictions = await restrictions.get({
+    const getRestrictions = await restrictions.getAll({
       zone: ZONES.ONE,
       resource: RESOURCES.KIWI
     });
@@ -374,7 +374,7 @@ describe('restrictions', function() {
     should.exist(actualRestriction.restriction);
     actualRestriction.restriction.should.deep.equal(expectedRestriction);
 
-    const getRestrictions = await restrictions.get({
+    const getRestrictions = await restrictions.getAll({
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
     });
@@ -393,10 +393,7 @@ describe('restrictions', function() {
     let err;
     try {
       // try getting the removed restriction, this should throw a NotFoundError
-      getRestriction2 = await restrictions.get({
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO
-      });
+      getRestriction2 = await restrictions.get({id});
     } catch(e) {
       err = e;
     }
@@ -436,7 +433,7 @@ describe('restrictions', function() {
     should.exist(actualRestriction.restriction);
     actualRestriction.restriction.should.deep.equal(expectedRestriction);
 
-    const getRestrictions = await restrictions.get({
+    const getRestrictions = await restrictions.getAll({
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
     });
@@ -452,10 +449,7 @@ describe('restrictions', function() {
     let err;
     try {
       // try getting the removed restriction, this should throw a NotFoundError
-      getRestriction2 = await restrictions.get({
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO
-      });
+      getRestriction2 = await restrictions.get({id});
     } catch(e) {
       err = e;
     }
