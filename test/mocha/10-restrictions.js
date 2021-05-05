@@ -205,9 +205,9 @@ describe('restrictions', function() {
       resource: RESOURCES.MANGO
     });
     should.exist(restrictionsArray);
-    restrictionsArray.restrictions.length.should.equal(2);
-    restrictionsArray.restrictions[0].restriction.should.eql(mockRestriction1);
-    restrictionsArray.restrictions[1].restriction.should.eql(mockRestriction2);
+    restrictionsArray.should.be.an('array');
+    restrictionsArray.length.should.equal(2);
+    restrictionsArray[0].should.have.keys('restriction', 'meta');
   });
 
   it('should get zero restrictions that match a request', async function() {
@@ -377,9 +377,9 @@ describe('restrictions', function() {
       resource: RESOURCES.ASPARAGUS
     });
     should.exist(restrictionsArray);
-    restrictionsArray.restrictions.length.should.equal(2);
-    restrictionsArray.restrictions[0].restriction.should.eql(mockRestriction1);
-    restrictionsArray.restrictions[1].restriction.should.eql(mockRestriction2);
+    restrictionsArray.should.be.an('array');
+    restrictionsArray.length.should.equal(2);
+    restrictionsArray[0].should.have.keys('restriction', 'meta');
 
     // remove the restriction
     await restrictions.removeAll({
@@ -389,7 +389,7 @@ describe('restrictions', function() {
     let restrictionsArray2;
     let err;
     try {
-      // try getting the removed restriction, this should throw a NotFoundError
+      // try getting the removed restriction, this should return an empty array
       restrictionsArray2 = await restrictions.getAll({
         zone: ZONES.ONE,
         resource: RESOURCES.ASPARAGUS
@@ -397,10 +397,10 @@ describe('restrictions', function() {
     } catch(e) {
       err = e;
     }
-    should.not.exist(restrictionsArray2);
-    should.exist(err);
-    err.name.should.equal('NotFoundError');
-    err.message.should.equal('Restriction not found.');
+    should.not.exist(err);
+    should.exist(restrictionsArray2);
+    restrictionsArray2.should.be.an('array');
+    restrictionsArray2.length.should.equal(0);
   });
 
   it('should remove a restriction from the database by id', async function() {
