@@ -5,9 +5,11 @@
 ### Changed
 - **BREAKING**: `restrictions.get()` now takes an `id` parameter, instead of
   `zone` and `resource`.
+- **BREAKING**: `restrictions.remove()` now takes an `id` parameter, instead of
+  `zone` and `resource`.
 
 ### Added
-- Added `getAll()` and `removeById()` to `restrictions`.
+- Added `getAll()` and `removeAll()` to `restrictions`.
 
 ## 2.0.0 - 2021-03-16
 

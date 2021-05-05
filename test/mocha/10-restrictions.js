@@ -155,22 +155,8 @@ describe('restrictions', function() {
     });
 
   it('should get a restriction by id', async function() {
-    const id = await generateId();
-    await restrictions.insert({
-      restriction: {
-        id,
-        zone: ZONES.TWO,
-        resource: RESOURCES.STRAWBERRY,
-        method: 'limitOverDuration',
-        methodOptions: {
-          limit: 1,
-          duration: 'P30D'
-        }
-      }
-    });
-    const getRestriction = await restrictions.get({id});
-    const expectedRestriction = {
-      id,
+    const mockRestriction = {
+      id: await generateId(),
       zone: ZONES.TWO,
       resource: RESOURCES.STRAWBERRY,
       method: 'limitOverDuration',
@@ -179,35 +165,49 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
+    await restrictions.insert({
+      restriction: mockRestriction
+    });
+    const getRestriction = await restrictions.get({id: mockRestriction.id});
     should.exist(getRestriction);
-    should.exist(getRestriction.meta);
-    should.exist(getRestriction.restriction);
-    should.exist(getRestriction.restriction.id);
-    expectedRestriction.id = getRestriction.restriction.id;
-    getRestriction.restriction.should.deep.equal(expectedRestriction);
+    getRestriction.restriction.should.eql(mockRestriction);
   });
 
-  it('should get a restriction', async function() {
-    const getRestrictions = await restrictions.getAll({
+  it('should get all restrictions for zone and resource', async function() {
+    const mockRestriction1 = {
+      id: await generateId(),
       zone: ZONES.ONE,
-      resource: RESOURCES.KIWI
-    });
-    const expectedRestriction = {
-      zone: ZONES.ONE,
-      resource: RESOURCES.KIWI,
+      resource: RESOURCES.MANGO,
       method: 'limitOverDuration',
       methodOptions: {
-        limit: 1,
+        limit: 10,
         duration: 'P30D'
       }
     };
-    const getRestriction = getRestrictions.restrictions[0];
-    should.exist(getRestriction);
-    should.exist(getRestriction.meta);
-    should.exist(getRestriction.restriction);
-    should.exist(getRestriction.restriction.id);
-    expectedRestriction.id = getRestriction.restriction.id;
-    getRestriction.restriction.should.deep.equal(expectedRestriction);
+    const mockRestriction2 = {
+      id: await generateId(),
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO,
+      method: 'limitOverDuration',
+      methodOptions: {
+        limit: 1,
+        duration: 'P7D'
+      }
+    };
+    await restrictions.insert({
+      restriction: mockRestriction1
+    });
+    await restrictions.insert({
+      restriction: mockRestriction2
+    });
+    const restrictionsArray = await restrictions.getAll({
+      zone: ZONES.ONE,
+      resource: RESOURCES.MANGO
+    });
+    should.exist(restrictionsArray);
+    restrictionsArray.restrictions.length.should.equal(2);
+    restrictionsArray.restrictions[0].restriction.should.eql(mockRestriction1);
+    restrictionsArray.restrictions[1].restriction.should.eql(mockRestriction2);
   });
 
   it('should get zero restrictions that match a request', async function() {
@@ -345,59 +345,59 @@ describe('restrictions', function() {
   });
 
   it('should remove a restriction from the database', async function() {
-    // create restriction
-    const id = await generateId();
-    const actualRestriction = await restrictions.insert({
-      restriction: {
-        id,
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO,
-        method: 'limitOverDuration',
-        methodOptions: {
-          limit: 1,
-          duration: 'P30D'
-        }
-      }
-    });
-    const expectedRestriction = {
-      id,
+    // create restrictions
+    const mockRestriction1 = {
+      id: await generateId(),
       zone: ZONES.ONE,
-      resource: RESOURCES.MANGO,
+      resource: RESOURCES.ASPARAGUS,
       method: 'limitOverDuration',
       methodOptions: {
-        limit: 1,
+        limit: 10,
         duration: 'P30D'
       }
     };
-    should.exist(actualRestriction);
-    should.exist(actualRestriction.meta);
-    should.exist(actualRestriction.restriction);
-    actualRestriction.restriction.should.deep.equal(expectedRestriction);
-
-    const getRestrictions = await restrictions.getAll({
+    const mockRestriction2 = {
+      id: await generateId(),
       zone: ZONES.ONE,
-      resource: RESOURCES.MANGO
+      resource: RESOURCES.ASPARAGUS,
+      method: 'limitOverDuration',
+      methodOptions: {
+        limit: 1,
+        duration: 'P7D'
+      }
+    };
+    await restrictions.insert({
+      restriction: mockRestriction1
     });
-    const getRestriction = getRestrictions.restrictions[0];
-    should.exist(getRestriction);
-    should.exist(getRestriction.meta);
-    should.exist(getRestriction.restriction);
-    getRestriction.restriction.should.deep.equal(expectedRestriction);
+    await restrictions.insert({
+      restriction: mockRestriction2
+    });
+    const restrictionsArray = await restrictions.getAll({
+      zone: ZONES.ONE,
+      resource: RESOURCES.ASPARAGUS
+    });
+    should.exist(restrictionsArray);
+    restrictionsArray.restrictions.length.should.equal(2);
+    restrictionsArray.restrictions[0].restriction.should.eql(mockRestriction1);
+    restrictionsArray.restrictions[1].restriction.should.eql(mockRestriction2);
 
     // remove the restriction
-    await restrictions.remove({
+    await restrictions.removeAll({
       zone: ZONES.ONE,
-      resource: RESOURCES.MANGO
+      resource: RESOURCES.ASPARAGUS
     });
-    let getRestriction2;
+    let restrictionsArray2;
     let err;
     try {
       // try getting the removed restriction, this should throw a NotFoundError
-      getRestriction2 = await restrictions.get({id});
+      restrictionsArray2 = await restrictions.getAll({
+        zone: ZONES.ONE,
+        resource: RESOURCES.ASPARAGUS
+      });
     } catch(e) {
       err = e;
     }
-    should.not.exist(getRestriction2);
+    should.not.exist(restrictionsArray2);
     should.exist(err);
     err.name.should.equal('NotFoundError');
     err.message.should.equal('Restriction not found.');
@@ -405,21 +405,8 @@ describe('restrictions', function() {
 
   it('should remove a restriction from the database by id', async function() {
     // create restriction
-    const id = await generateId();
-    const actualRestriction = await restrictions.insert({
-      restriction: {
-        id,
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO,
-        method: 'limitOverDuration',
-        methodOptions: {
-          limit: 1,
-          duration: 'P30D'
-        }
-      }
-    });
-    const expectedRestriction = {
-      id,
+    const mockRestriction = {
+      id: await generateId(),
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO,
       method: 'limitOverDuration',
@@ -428,32 +415,29 @@ describe('restrictions', function() {
         duration: 'P30D'
       }
     };
-    should.exist(actualRestriction);
-    should.exist(actualRestriction.meta);
-    should.exist(actualRestriction.restriction);
-    actualRestriction.restriction.should.deep.equal(expectedRestriction);
-
-    const getRestrictions = await restrictions.getAll({
-      zone: ZONES.ONE,
-      resource: RESOURCES.MANGO
+    const actualRestriction = await restrictions.insert({
+      restriction: mockRestriction
     });
-    const getRestriction = getRestrictions.restrictions[0];
-    should.exist(getRestriction);
-    should.exist(getRestriction.meta);
-    should.exist(getRestriction.restriction);
-    getRestriction.restriction.should.deep.equal(expectedRestriction);
+    should.exist(actualRestriction);
+    actualRestriction.restriction.should.eql(mockRestriction);
+
+    const restriction = await restrictions.get({
+      id: mockRestriction.id
+    });
+
+    restriction.restriction.should.eql(mockRestriction);
 
     // remove the restriction
-    await restrictions.removeById({id});
-    let getRestriction2;
+    await restrictions.remove({id: mockRestriction.id});
+    let restriction2;
     let err;
     try {
       // try getting the removed restriction, this should throw a NotFoundError
-      getRestriction2 = await restrictions.get({id});
+      restriction2 = await restrictions.get({id: mockRestriction.id});
     } catch(e) {
       err = e;
     }
-    should.not.exist(getRestriction2);
+    should.not.exist(restriction2);
     should.exist(err);
     err.name.should.equal('NotFoundError');
     err.message.should.equal('Restriction not found.');
