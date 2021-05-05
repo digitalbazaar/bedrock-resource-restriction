@@ -205,9 +205,11 @@ describe('restrictions', function() {
       resource: RESOURCES.MANGO
     });
     should.exist(restrictionsArray);
-    restrictionsArray.should.be.an('array');
-    restrictionsArray.length.should.equal(2);
-    restrictionsArray[0].should.have.keys('restriction', 'meta');
+    restrictionsArray.restrictions.should.be.an('array');
+    restrictionsArray.restrictions.length.should.equal(2);
+    restrictionsArray.restrictions.should.have.deep.members(
+      [mockRestriction1, mockRestriction2]
+    );
   });
 
   it('should get zero restrictions that match a request', async function() {
@@ -377,9 +379,11 @@ describe('restrictions', function() {
       resource: RESOURCES.ASPARAGUS
     });
     should.exist(restrictionsArray);
-    restrictionsArray.should.be.an('array');
-    restrictionsArray.length.should.equal(2);
-    restrictionsArray[0].should.have.keys('restriction', 'meta');
+    restrictionsArray.restrictions.should.be.an('array');
+    restrictionsArray.restrictions.length.should.equal(2);
+    restrictionsArray.restrictions.should.have.deep.members(
+      [mockRestriction1, mockRestriction2]
+    );
 
     // remove the restriction
     await restrictions.removeAll({
@@ -399,8 +403,8 @@ describe('restrictions', function() {
     }
     should.not.exist(err);
     should.exist(restrictionsArray2);
-    restrictionsArray2.should.be.an('array');
-    restrictionsArray2.length.should.equal(0);
+    restrictionsArray2.restrictions.should.be.an('array');
+    restrictionsArray2.restrictions.length.should.equal(0);
   });
 
   it('should remove a restriction from the database by id', async function() {
