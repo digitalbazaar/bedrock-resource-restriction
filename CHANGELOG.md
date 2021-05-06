@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 3.0.0 - 2021-XX-XX
+## 3.0.0 - 2021-05-06
 
 ### Changed
 - **BREAKING**: `restrictions.get()` now takes an `id` parameter, instead of
