@@ -4,6 +4,7 @@
 'use strict';
 
 const {resources, restrictions} = require('bedrock-resource-restriction');
+const uuid = require('uuid-random');
 
 const {
   ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult, generateId
@@ -555,6 +556,10 @@ describe('resources', function() {
   });
 
   it('should acquire successfully after expiration', async function() {
+    // use local `acquirerId` so uninfluenced by previous acquisitions
+    const acquirerId = uuid();
+    const seconds = 2;
+
     const id = await generateId();
     await restrictions.insert({
       restriction: {
@@ -564,7 +569,7 @@ describe('resources', function() {
         method: 'limitOverDuration',
         methodOptions: {
           limit: 1,
-          duration: 'PT5S'
+          duration: `PT${seconds}S`
         }
       }
     });
@@ -572,7 +577,6 @@ describe('resources', function() {
     // acquire first resource
     {
       const now = Date.now();
-      const acquirerId = ACQUIRER_ID;
       const request = [
         {resource: RESOURCES.PLUM, count: 1, requested: now}
       ];
@@ -591,7 +595,6 @@ describe('resources', function() {
     // fail to acquire second resource
     {
       const now = Date.now();
-      const acquirerId = ACQUIRER_ID;
       const request = [
         {resource: RESOURCES.PLUM, count: 1, requested: now}
       ];
@@ -610,13 +613,12 @@ describe('resources', function() {
       assertCheckResult(result, expectedResult);
     }
 
-    // wait 5 seconds
-    await new Promise(r => setTimeout(r, 5000));
+    // wait for expiration period
+    await new Promise(r => setTimeout(r, seconds * 1000));
 
     // acquire second resource
     {
       const now = Date.now();
-      const acquirerId = ACQUIRER_ID;
       const request = [
         {resource: RESOURCES.PLUM, count: 1, requested: now}
       ];
