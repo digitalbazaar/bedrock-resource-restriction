@@ -23,6 +23,10 @@
   the overall `expires` time for the entire acquisition record. The parameter,
   `acquisitionTtl`, will now be used as a default for any restrictions that do
   not specify a `ttl`.
+- **BREAKING**: `release()` no longer requires `acquisitionTtl` to be passed.
+  Nothing new is being acquired and the previously stored `ttl` will be used
+  to determine the new `expires` for the relevant acquisition record once any
+  resources have been released.
 
 ## 3.0.0 - 2021-05-06
 
