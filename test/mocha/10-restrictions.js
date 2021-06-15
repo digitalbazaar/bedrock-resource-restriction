@@ -269,7 +269,8 @@ describe('restrictions', function() {
     });
     const expectedResult = {
       authorized: true,
-      excess: 0
+      excess: 0,
+      ttl: 2592000000
     };
     should.exist(result);
     result.should.deep.equal(expectedResult);
@@ -317,7 +318,8 @@ describe('restrictions', function() {
     });
     const expectedResult = {
       authorized: true,
-      excess: 0
+      excess: 0,
+      ttl: 2592000000
     };
     should.exist(result);
     result.should.deep.equal(expectedResult);
@@ -340,7 +342,8 @@ describe('restrictions', function() {
     });
     const expectedResult = {
       authorized: false,
-      excess: 1
+      excess: 1,
+      ttl: 2592000000
     };
     should.exist(result);
     result.should.deep.equal(expectedResult);

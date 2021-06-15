@@ -553,4 +553,83 @@ describe('resources', function() {
     const expectedDiff = 1;
     diff.should.equal(expectedDiff);
   });
+
+  it('should acquire successfully after expiration', async function() {
+    const id = await generateId();
+    await restrictions.insert({
+      restriction: {
+        id,
+        zone: ZONES.ONE,
+        resource: RESOURCES.PLUM,
+        method: 'limitOverDuration',
+        methodOptions: {
+          limit: 1,
+          duration: 'PT5S'
+        }
+      }
+    });
+
+    // acquire first resource
+    {
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      const request = [
+        {resource: RESOURCES.PLUM, count: 1, requested: now}
+      ];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE, ZONES.TWO];
+      const result = await resources.acquire(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedResult = {
+        authorized: true,
+        excessResources: [],
+        untrackedResources: []
+      };
+      assertCheckResult(result, expectedResult);
+    }
+
+    // fail to acquire second resource
+    {
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      const request = [
+        {resource: RESOURCES.PLUM, count: 1, requested: now}
+      ];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE, ZONES.TWO];
+      const result = await resources.acquire(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedResult = {
+        authorized: false,
+        excessResources: [{
+          resource: RESOURCES.PLUM,
+          count: 1
+        }],
+        untrackedResources: []
+      };
+      assertCheckResult(result, expectedResult);
+    }
+
+    // wait 5 seconds
+    await new Promise(r => setTimeout(r, 5000));
+
+    // acquire second resource
+    {
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      const request = [
+        {resource: RESOURCES.PLUM, count: 1, requested: now}
+      ];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE, ZONES.TWO];
+      const result = await resources.acquire(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedResult = {
+        authorized: true,
+        excessResources: [],
+        untrackedResources: []
+      };
+      assertCheckResult(result, expectedResult);
+    }
+  });
 });
