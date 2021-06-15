@@ -22,7 +22,8 @@ exports.RESOURCES = {
   STRAWBERRY: uuid(),
   CUCUMBER: uuid(),
   ASPARAGUS: uuid(),
-  LIME: uuid()
+  LIME: uuid(),
+  PLUM: uuid()
 };
 
 exports.ZONES = {

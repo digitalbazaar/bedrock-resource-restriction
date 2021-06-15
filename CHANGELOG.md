@@ -2,9 +2,27 @@
 
 ## 4.0.0 - 2021-xx-xx
 
+### Added
+- **BREAKING**: Acquisition records now include `ttl` with a milliseconds since
+  the epoch value. This value is used to automatically prune previously
+  acquired resources prior to acquiring/releasing new ones. This relative
+  value is needed in additional to the `expires` field to perform this
+  selective pruning. The `expires` field continues to be used to clean up
+  an entire acquisition record (a blunt instrument that runs automatically
+  in mongodb after it is known that all resource acquisitions have expired
+  vs. `ttl` that runs on demand and is applied granularly).
+
 ### Changed
 - **BREAKING**: Updated property `expires` in `resource-restriction-acquisition`
   table from seconds since the epoch to a Date Object.
+- **BREAKING**: As this module only tracks acquistions when restrictions apply,
+  a new `ttl` value in milliseconds may be returned when applying a restriction
+  to enable acquisitions to expire as soon as restrictions would no longer
+  apply. If applied restrictions return such a TTL, then it will be used when
+  calculating both a single `ttl` that will be used for each acquisition and
+  the overall `expires` time for the entire acquisition record. The parameter,
+  `acquisitionTtl`, will now be used as a default for any restrictions that do
+  not specify a `ttl`.
 
 ## 3.0.0 - 2021-05-06
 

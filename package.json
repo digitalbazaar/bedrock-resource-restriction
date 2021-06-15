@@ -26,7 +26,6 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-resource-restriction",
   "dependencies": {
     "assert-plus": "^1.0.0",
-    "iso8601-duration": "^1.3.0",
     "moment": "^2.29.1"
   },
   "peerDependencies": {
