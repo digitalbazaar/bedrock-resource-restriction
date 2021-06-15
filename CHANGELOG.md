@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 4.0.0 - 2021-xx-xx
+
+### Changed
+- **BREAKING**: Updated property `expires` in `resource-restriction-acquisition`
+  table from seconds since the epoch to a Date Object.
+
 ## 3.0.0 - 2021-05-06
 
 ### Changed
