@@ -4,6 +4,7 @@
 'use strict';
 
 const {delay} = require('bedrock').util;
+const database = require('bedrock-mongodb');
 const {resources, restrictions} = require('bedrock-resource-restriction');
 const uuid = require('uuid-random');
 
@@ -556,83 +557,166 @@ describe('resources', function() {
     diff.should.equal(expectedDiff);
   });
 
-  it('should acquire successfully after expiration', async function() {
-    // use local `acquirerId` so uninfluenced by previous acquisitions
-    const acquirerId = uuid();
-    const seconds = 2;
+  // only run this test during CI as it is a long-running test
+  if(process.env.CI) {
+    it('should acquire successfully after ttl', async function() {
+      // use local `acquirerId` so uninfluenced by previous acquisitions
+      const acquirerId = uuid();
+      const seconds = 2;
 
-    const id = await generateId();
-    await restrictions.insert({
-      restriction: {
-        id,
-        zone: ZONES.ONE,
-        resource: RESOURCES.PLUM,
-        method: 'limitOverDuration',
-        methodOptions: {
-          limit: 1,
-          duration: `PT${seconds}S`
+      const id = await generateId();
+      await restrictions.insert({
+        restriction: {
+          id,
+          zone: ZONES.ONE,
+          resource: RESOURCES.PLUM,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: `PT${seconds}S`
+          }
         }
+      });
+
+      // acquire first resource
+      {
+        const now = Date.now();
+        const request = [
+          {resource: RESOURCES.PLUM, count: 1, requested: now}
+        ];
+        const acquisitionTtl = 30000;
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // fail to acquire second resource
+      {
+        const now = Date.now();
+        const request = [
+          {resource: RESOURCES.PLUM, count: 1, requested: now}
+        ];
+        const acquisitionTtl = 30000;
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones});
+        const expectedResult = {
+          authorized: false,
+          excessResources: [{
+            resource: RESOURCES.PLUM,
+            count: 1
+          }],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // wait for ttl-based expiration period
+      await delay(seconds * 1000);
+
+      // acquire second resource
+      {
+        const now = Date.now();
+        const request = [
+          {resource: RESOURCES.PLUM, count: 1, requested: now}
+        ];
+        const acquisitionTtl = 30000;
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
       }
     });
+  }
 
-    // acquire first resource
-    {
-      const now = Date.now();
-      const request = [
-        {resource: RESOURCES.PLUM, count: 1, requested: now}
-      ];
-      const acquisitionTtl = 30000;
-      const zones = [ZONES.ONE, ZONES.TWO];
-      const result = await resources.acquire(
-        {acquirerId, request, acquisitionTtl, zones});
-      const expectedResult = {
-        authorized: true,
-        excessResources: [],
-        untrackedResources: []
-      };
-      assertCheckResult(result, expectedResult);
-    }
+  // only run this test during CI as it is a long-running test
+  if(process.env.CI) {
+    it('should acquire successfully after expiration', async function() {
+      // this test needs to run for up to 3 minutes to allow mongodb's record
+      // clean up worker to execute
+      this.timeout(3 * 60 * 1000);
 
-    // fail to acquire second resource
-    {
-      const now = Date.now();
-      const request = [
-        {resource: RESOURCES.PLUM, count: 1, requested: now}
-      ];
-      const acquisitionTtl = 30000;
-      const zones = [ZONES.ONE, ZONES.TWO];
-      const result = await resources.acquire(
-        {acquirerId, request, acquisitionTtl, zones});
-      const expectedResult = {
-        authorized: false,
-        excessResources: [{
+      // use local `acquirerId` so uninfluenced by previous acquisitions
+      const acquirerId = uuid();
+      const seconds = 2;
+
+      const id = await generateId();
+      await restrictions.insert({
+        restriction: {
+          id,
+          zone: ZONES.ONE,
           resource: RESOURCES.PLUM,
-          count: 1
-        }],
-        untrackedResources: []
-      };
-      assertCheckResult(result, expectedResult);
-    }
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: `PT${seconds}S`
+          }
+        }
+      });
 
-    // wait for expiration period
-    await delay(seconds * 1000);
+      // acquire first resource
+      {
+        const now = Date.now();
+        const request = [
+          {resource: RESOURCES.PLUM, count: 1, requested: now}
+        ];
+        const acquisitionTtl = 30000;
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
 
-    // acquire second resource
-    {
-      const now = Date.now();
-      const request = [
-        {resource: RESOURCES.PLUM, count: 1, requested: now}
-      ];
-      const acquisitionTtl = 30000;
-      const zones = [ZONES.ONE, ZONES.TWO];
-      const result = await resources.acquire(
-        {acquirerId, request, acquisitionTtl, zones});
-      const expectedResult = {
-        authorized: true,
-        excessResources: [],
-        untrackedResources: []
-      };
-      assertCheckResult(result, expectedResult);
-    }
-  });
+      // fail to acquire second resource
+      {
+        const now = Date.now();
+        const request = [
+          {resource: RESOURCES.PLUM, count: 1, requested: now}
+        ];
+        const acquisitionTtl = 30000;
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones});
+        const expectedResult = {
+          authorized: false,
+          excessResources: [{
+            resource: RESOURCES.PLUM,
+            count: 1
+          }],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // wait for mongodb-worker-driven expiration period (mongodb's worker runs
+      // every 60 seconds but we don't know when, so we need to allow for two
+      // full 60 second cycles + time for the record removal to occur to ensure
+      // the record is cleaned up; hence we wait for 2 minutes + 10 seconds)
+      await delay((60 * 2 + 10) * 1000);
+
+      // check to see that the record has been removed
+      const query = {'acquisition.acquirerId': acquirerId};
+      const projection = {_id: 0};
+      const collection =
+        database.collections['resource-restriction-acquisition'];
+      const record = await collection.findOne(query, projection);
+      should.not.exist(record);
+    });
+  }
 });
