@@ -14,7 +14,8 @@
 
 ### Changed
 - **BREAKING**: Updated property `expires` in `resource-restriction-acquisition`
-  table from seconds since the epoch to a Date Object.
+  table from seconds since the epoch to a Date Object. The
+  `resource-restriction-acquisition` collection MUST be dropped to upgrade.
 - **BREAKING**: As this module only tracks acquistions when restrictions apply,
   a new `ttl` value in milliseconds may be returned when applying a restriction
   to enable acquisitions to expire as soon as restrictions would no longer
