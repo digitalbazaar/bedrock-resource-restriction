@@ -3,6 +3,7 @@
  */
 'use strict';
 
+const {delay} = require('bedrock').util;
 const {resources, restrictions} = require('bedrock-resource-restriction');
 const uuid = require('uuid-random');
 
@@ -614,7 +615,7 @@ describe('resources', function() {
     }
 
     // wait for expiration period
-    await new Promise(r => setTimeout(r, seconds * 1000));
+    await delay(seconds * 1000);
 
     // acquire second resource
     {
