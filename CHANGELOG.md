@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 4.0.0 - 2021-xx-xx
+## 4.0.0 - 2021-06-16
 
 ### Added
 - **BREAKING**: Acquisition records now include `ttl` with a milliseconds since
