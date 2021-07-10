@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 4.0.1 - 2021-07-10
+
+### Fixed
+- Remove unused peer dependency:
+  - `bedrock-account`
+
 ## 4.0.0 - 2021-06-16
 
 ### Added
