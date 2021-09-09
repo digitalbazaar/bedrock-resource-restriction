@@ -1,6 +1,6 @@
 {
   "name": "bedrock-resource-restriction",
-  "version": "5.0.0",
+  "version": "5.0.1-0",
   "description": "Bedrock Resource Restriction",
   "main": "./lib",
   "scripts": {
