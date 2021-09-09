@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 5.0.0 - 2021-09-xx
+## 5.0.0 - 2021-09-09
 
 ### Changed
 - **BREAKING**: Updated `bedrock-tokenizer` to `v2.0.0` which nows requires a
