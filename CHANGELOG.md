@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 5.0.0 - 2021-09-xx
+
+### Changed
+- **BREAKING**: Updated `bedrock-tokenizer` to `v2.0.0` which nows requires a
+  meter to be configured for use with the WebKMS Service.
+
 ## 4.0.1 - 2021-07-10
 
 ### Fixed
