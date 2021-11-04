@@ -57,7 +57,13 @@ exports.assertResourceRestriction = (actual, expected) => {
   }
 };
 
+exports.insertRecord = async ({record, collectionName}) => {
+  const collection = database.collections[collectionName];
+  await collection.insertOne(record, database.writeOptions);
+};
+
 exports.cleanDB = async () => {
   await database.collections['tokenizer-tokenizer'].deleteMany({});
+  await database.collections['resource-restriction-restriction'].deleteMany({});
   await database.collections['resource-restriction-acquisition'].deleteMany({});
 };

@@ -7,12 +7,14 @@ const {delay} = require('bedrock').util;
 const database = require('bedrock-mongodb');
 const {resources, restrictions} = require('bedrock-resource-restriction');
 const uuid = require('uuid-random');
+const {mockAcquisition} = require('./mock.data.js');
 
 const {
-  ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult, generateId
+  ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult, generateId, cleanDB,
+  insertRecord
 } = require('./helpers.js');
 
-describe('resources', function() {
+describe('Resources', function() {
   it('should authorize a request with no restrictions', async function() {
     const now = Date.now();
     const acquirerId = ACQUIRER_ID;
@@ -719,4 +721,64 @@ describe('resources', function() {
       should.not.exist(record);
     });
   }
+});
+
+describe('Resources Database Tests', function() {
+  describe('Indexes', function() {
+    beforeEach(async () => {
+      await cleanDB();
+    });
+    it(`is properly indexed for 'acquisition.acquirerId' in ` +
+      '_getAcquisitionRecord()', async function() {
+      const collectionName = 'resource-restriction-acquisition';
+      await insertRecord({record: mockAcquisition, collectionName});
+
+      const {acquirerId} = mockAcquisition.acquisition;
+      const {executionStats} = await resources._getAcquisitionRecord({
+        acquirerId, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+    });
+    it(`is properly indexed for 'acquisition.acquirerId' and ` +
+      `'acquisition.tokenized' in ` +
+      '_updateAcquisitionRecord()', async function() {
+      const collectionName = 'resource-restriction-acquisition';
+      await insertRecord({record: mockAcquisition, collectionName});
+
+      const {acquirerId, expires, ttl, tokenized} = mockAcquisition.acquisition;
+      const newTokenized = [...JSON.parse(JSON.stringify(tokenized))];
+      newTokenized[0].tokenizerId = '371593a1-a5aa-4346-8663-dba5ebc854b9';
+
+      const {executionStats} = await resources._updateAcquisitionRecord({
+        acquirerId, acquisitionRecord: mockAcquisition, newTokenized, expires,
+        ttl, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+    });
+    it(`is properly indexed for 'acquisition.acquirerId' and ` +
+      `'acquisition.tokenized' in ` +
+      '_removeAcquisitionRecord()', async function() {
+      const collectionName = 'resource-restriction-acquisition';
+      await insertRecord({record: mockAcquisition, collectionName});
+
+      const {acquirerId} = mockAcquisition.acquisition;
+
+      const {executionStats} = await resources._removeAcquisitionRecord({
+        acquirerId, acquisitionRecord: mockAcquisition, explain: true
+      });
+      executionStats.nReturned.should.equal(1);
+      executionStats.totalKeysExamined.should.equal(1);
+      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.executionStages.inputStage.inputStage.stage
+        .should.equal('IXSCAN');
+    });
+  });
 });
