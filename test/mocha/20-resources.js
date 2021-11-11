@@ -727,12 +727,16 @@ describe('Resources Database Tests', function() {
   describe('Indexes', function() {
     beforeEach(async () => {
       await cleanDB();
+
+      const collectionName = 'resource-restriction-acquisition';
+      const mockAcquisition2 = JSON.parse(JSON.stringify(mockAcquisition));
+      mockAcquisition2.acquisition
+        .acquirerId = '22287e9c-5c32-4e59-b103-138f99fe872d';
+      await insertRecord({record: mockAcquisition, collectionName});
+      await insertRecord({record: mockAcquisition2, collectionName});
     });
     it(`is properly indexed for 'acquisition.acquirerId' in ` +
       '_getAcquisitionRecord()', async function() {
-      const collectionName = 'resource-restriction-acquisition';
-      await insertRecord({record: mockAcquisition, collectionName});
-
       const {acquirerId} = mockAcquisition.acquisition;
       const {executionStats} = await resources._getAcquisitionRecord({
         acquirerId, explain: true
@@ -746,9 +750,6 @@ describe('Resources Database Tests', function() {
     it(`is properly indexed for 'acquisition.acquirerId' and ` +
       `'acquisition.tokenized' in ` +
       '_updateAcquisitionRecord()', async function() {
-      const collectionName = 'resource-restriction-acquisition';
-      await insertRecord({record: mockAcquisition, collectionName});
-
       const {acquirerId, expires, ttl, tokenized} = mockAcquisition.acquisition;
       const newTokenized = [...JSON.parse(JSON.stringify(tokenized))];
       newTokenized[0].tokenizerId = '371593a1-a5aa-4346-8663-dba5ebc854b9';
@@ -766,11 +767,7 @@ describe('Resources Database Tests', function() {
     it(`is properly indexed for 'acquisition.acquirerId' and ` +
       `'acquisition.tokenized' in ` +
       '_removeAcquisitionRecord()', async function() {
-      const collectionName = 'resource-restriction-acquisition';
-      await insertRecord({record: mockAcquisition, collectionName});
-
       const {acquirerId} = mockAcquisition.acquisition;
-
       const {executionStats} = await resources._removeAcquisitionRecord({
         acquirerId, acquisitionRecord: mockAcquisition, explain: true
       });
