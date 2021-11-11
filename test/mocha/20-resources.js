@@ -733,6 +733,8 @@ describe('Resources Database Tests', function() {
       mockAcquisition2.acquisition
         .acquirerId = '22287e9c-5c32-4e59-b103-138f99fe872d';
       await insertRecord({record: mockAcquisition, collectionName});
+      // second record is inserted here in order to do proper assertions for
+      // 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
       await insertRecord({record: mockAcquisition2, collectionName});
     });
     it(`is properly indexed for 'acquisition.acquirerId' in ` +
