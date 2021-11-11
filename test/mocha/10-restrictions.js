@@ -517,6 +517,8 @@ describe('Restrictions Database Tests', function() {
       await restrictions.insert({
         restriction: mockRestriction
       });
+      // second restriction is inserted here in order to do proper assertions
+      // for 'nReturned', 'totalKeysExamined' and 'totalDocsExamined'.
       await restrictions.insert({
         restriction: mockRestriction2
       });
