@@ -489,91 +489,12 @@ describe('Restrictions', function() {
 
 describe('Restrictions Database Tests', function() {
   describe('Indexes', function() {
+    let mockRestriction;
     beforeEach(async () => {
       await cleanDB();
-    });
-    it(`is properly indexed for 'restriction.id' in update()`,
-      async function() {
-        // create restriction
-        const mockRestriction = {
-          id: await generateId(),
-          zone: ZONES.ONE,
-          resource: RESOURCES.ASPARAGUS,
-          method: 'limitOverDuration',
-          methodOptions: {
-            limit: 10,
-            duration: 'P30D'
-          }
-        };
-        await restrictions.insert({
-          restriction: mockRestriction
-        });
 
-        const {executionStats} = await restrictions.update({
-          restriction: mockRestriction, explain: true
-        });
-        executionStats.nReturned.should.equal(1);
-        executionStats.totalKeysExamined.should.equal(1);
-        executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-      });
-    it(`is properly indexed for 'restriction.id' in get()`,
-      async function() {
-        // create restriction
-        const mockRestriction = {
-          id: await generateId(),
-          zone: ZONES.ONE,
-          resource: RESOURCES.ASPARAGUS,
-          method: 'limitOverDuration',
-          methodOptions: {
-            limit: 10,
-            duration: 'P30D'
-          }
-        };
-        await restrictions.insert({
-          restriction: mockRestriction
-        });
-
-        const {executionStats} = await restrictions.get({
-          id: mockRestriction.id, explain: true
-        });
-        executionStats.nReturned.should.equal(1);
-        executionStats.totalKeysExamined.should.equal(1);
-        executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-      });
-    it(`is properly indexed for 'restriction.id' in remove()`,
-      async function() {
-        // create restriction
-        const mockRestriction = {
-          id: await generateId(),
-          zone: ZONES.ONE,
-          resource: RESOURCES.ASPARAGUS,
-          method: 'limitOverDuration',
-          methodOptions: {
-            limit: 10,
-            duration: 'P30D'
-          }
-        };
-        await restrictions.insert({
-          restriction: mockRestriction
-        });
-
-        const {executionStats} = await restrictions.remove({
-          id: mockRestriction.id, explain: true
-        });
-        executionStats.nReturned.should.equal(1);
-        executionStats.totalKeysExamined.should.equal(1);
-        executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-      });
-    it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
-      'in getAll()', async function() {
       // create restrictions
-      const mockRestriction1 = {
+      mockRestriction = {
         id: await generateId(),
         zone: ZONES.ONE,
         resource: RESOURCES.MANGO,
@@ -594,12 +515,49 @@ describe('Restrictions Database Tests', function() {
         }
       };
       await restrictions.insert({
-        restriction: mockRestriction1
+        restriction: mockRestriction
       });
       await restrictions.insert({
         restriction: mockRestriction2
       });
-
+    });
+    it(`is properly indexed for 'restriction.id' in update()`,
+      async function() {
+        const {executionStats} = await restrictions.update({
+          restriction: mockRestriction, explain: true
+        });
+        executionStats.nReturned.should.equal(1);
+        executionStats.totalKeysExamined.should.equal(1);
+        executionStats.totalDocsExamined.should.equal(1);
+        executionStats.executionStages.inputStage.inputStage.stage
+          .should.equal('IXSCAN');
+      });
+    it(`is properly indexed for 'restriction.id' in get()`,
+      async function() {
+        const {executionStats} = await restrictions.get({
+          id: mockRestriction.id, explain: true
+        });
+        executionStats.nReturned.should.equal(1);
+        executionStats.totalKeysExamined.should.equal(1);
+        executionStats.totalDocsExamined.should.equal(1);
+        executionStats.executionStages.inputStage.inputStage.inputStage.stage
+          .should.equal('IXSCAN');
+      });
+    it(`is properly indexed for 'restriction.id' in remove()`,
+      async function() {
+        const {executionStats} = await restrictions.remove({
+          id: mockRestriction.id, explain: true
+        });
+        executionStats.nReturned.should.equal(1);
+        executionStats.totalKeysExamined.should.equal(1);
+        executionStats.totalDocsExamined.should.equal(1);
+        executionStats.executionStages.inputStage.inputStage.stage
+          .should.equal('IXSCAN');
+      });
+    it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
+      'in getAll()', async function() {
+      // finds all records that match the 'restriction.zone' and
+      // 'restriction.resource' query since it is not a unique index.
       const {executionStats} = await restrictions.getAll({
         zone: ZONES.ONE,
         resource: RESOURCES.MANGO,
@@ -613,34 +571,8 @@ describe('Restrictions Database Tests', function() {
     });
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in removeAll()', async function() {
-      // create restrictions
-      const mockRestriction1 = {
-        id: await generateId(),
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO,
-        method: 'limitOverDuration',
-        methodOptions: {
-          limit: 10,
-          duration: 'P30D'
-        }
-      };
-      const mockRestriction2 = {
-        id: await generateId(),
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO,
-        method: 'limitOverDuration',
-        methodOptions: {
-          limit: 1,
-          duration: 'P7D'
-        }
-      };
-      await restrictions.insert({
-        restriction: mockRestriction1
-      });
-      await restrictions.insert({
-        restriction: mockRestriction2
-      });
-
+      // finds all records that match the 'restriction.zone' and
+      // 'restriction.resource' query since it is not a unique index.
       const {executionStats} = await restrictions.removeAll({
         zone: ZONES.ONE,
         resource: RESOURCES.MANGO,
@@ -654,24 +586,11 @@ describe('Restrictions Database Tests', function() {
     });
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in matchRequest()', async function() {
-      // create restrictions
-      const mockRestriction = {
-        id: await generateId(),
-        zone: ZONES.ONE,
-        resource: RESOURCES.KIWI,
-        method: 'limitOverDuration',
-        methodOptions: {
-          limit: 10,
-          duration: 'P30D'
-        }
-      };
-      await restrictions.insert({
-        restriction: mockRestriction
-      });
-
+      // finds all records that match the 'restriction.zone' and
+      // 'restriction.resource' query since it is not a unique index.
       const now = Date.now();
       const request = [
-        {resource: RESOURCES.KIWI, count: 1, requested: now}
+        {resource: RESOURCES.MANGO, count: 1, requested: now}
       ];
 
       const {executionStats} = await restrictions.matchRequest({
@@ -679,9 +598,9 @@ describe('Restrictions Database Tests', function() {
         zones: [ZONES.ONE, ZONES.TWO],
         explain: true
       });
-      executionStats.nReturned.should.equal(1);
-      executionStats.totalKeysExamined.should.equal(1);
-      executionStats.totalDocsExamined.should.equal(1);
+      executionStats.nReturned.should.equal(2);
+      executionStats.totalKeysExamined.should.equal(2);
+      executionStats.totalDocsExamined.should.equal(2);
       executionStats.executionStages.inputStage.inputStage.stage
         .should.equal('IXSCAN');
     });
