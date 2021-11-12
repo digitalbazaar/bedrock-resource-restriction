@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 5.1.0 - TBD
+## 5.1.0 - 2021-11-12
 
 ### Added
 - Added optional `explain` param to get more details about database performance.
