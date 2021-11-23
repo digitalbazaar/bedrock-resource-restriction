@@ -533,6 +533,8 @@ describe('Restrictions Database Tests', function() {
         executionStats.totalDocsExamined.should.equal(1);
         executionStats.executionStages.inputStage.inputStage.stage
           .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.keyPattern
+          .should.eql({'restriction.id': 1});
       });
     it(`is properly indexed for 'restriction.id' in get()`,
       async function() {
@@ -544,6 +546,8 @@ describe('Restrictions Database Tests', function() {
         executionStats.totalDocsExamined.should.equal(1);
         executionStats.executionStages.inputStage.inputStage.inputStage.stage
           .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.inputStage.
+          keyPattern.should.eql({'restriction.id': 1});
       });
     it(`is properly indexed for 'restriction.id' in remove()`,
       async function() {
@@ -555,6 +559,8 @@ describe('Restrictions Database Tests', function() {
         executionStats.totalDocsExamined.should.equal(1);
         executionStats.executionStages.inputStage.inputStage.stage
           .should.equal('IXSCAN');
+        executionStats.executionStages.inputStage.inputStage.
+          keyPattern.should.eql({'restriction.id': 1});
       });
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in getAll()', async function() {
@@ -570,6 +576,8 @@ describe('Restrictions Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(2);
       executionStats.executionStages.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.
+        keyPattern.should.eql({'restriction.zone': 1});
     });
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in removeAll()', async function() {
@@ -585,6 +593,8 @@ describe('Restrictions Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(2);
       executionStats.executionStages.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.keyPattern
+        .should.eql({'restriction.zone': 1});
     });
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in matchRequest()', async function() {
@@ -605,6 +615,8 @@ describe('Restrictions Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(2);
       executionStats.executionStages.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.
+        keyPattern.should.eql({'restriction.zone': 1});
     });
   });
 });

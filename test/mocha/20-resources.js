@@ -748,6 +748,8 @@ describe('Resources Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.inputStage.keyPattern
+        .should.eql({'acquisition.acquirerId': 1});
     });
     it(`is properly indexed for 'acquisition.acquirerId' and ` +
       `'acquisition.tokenized' in ` +
@@ -765,6 +767,8 @@ describe('Resources Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'acquisition.acquirerId': 1});
     });
     it(`is properly indexed for 'acquisition.acquirerId' and ` +
       `'acquisition.tokenized' in ` +
@@ -778,6 +782,8 @@ describe('Resources Database Tests', function() {
       executionStats.totalDocsExamined.should.equal(1);
       executionStats.executionStages.inputStage.inputStage.stage
         .should.equal('IXSCAN');
+      executionStats.executionStages.inputStage.inputStage.keyPattern
+        .should.eql({'acquisition.acquirerId': 1});
     });
   });
 });
