@@ -1,5 +1,10 @@
 # bedrock-resource-restriction ChangeLog
 
+## 5.2.0 - TBD
+
+### Removed
+- Remove unnecessary `promisify`.
+
 ## 5.1.0 - 2021-11-12
 
 ### Added
