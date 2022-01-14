@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 6.0.0 - 2022-TBD
+## 6.0.0 - 2022-01-14
 
 ### Changed
 - **BREAKING**: Update peer dependencies.
