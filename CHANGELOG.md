@@ -1,9 +1,20 @@
 # bedrock-resource-restriction ChangeLog
 
-## 5.2.0 - TBD
+## 6.0.0 - 2022-TBD
+
+### Changed
+- **BREAKING**: Update peer dependencies.
+  - Update `bedrock-tokenizer` to `v3.0`.
+  - Update `bedrock` to `v4.4.3`.
+  - Update `bedrock-mongodb` to `v8.4.1`.
+- Update test dependencies.
+
+### Added
+- Add missing packages `base64url-universal` and `esm`.
 
 ### Removed
 - Remove unnecessary `promisify`.
+- Remove unused dependency `pako`.
 
 ## 5.1.0 - 2021-11-12
 
