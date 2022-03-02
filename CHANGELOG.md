@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 7.0.0 - 2022-03-xx
+
+### Changed
+- **BREAKING**: Update peer dependencies:
+  - `bedrock-tokenizer@4`
+
 ## 6.0.0 - 2022-01-14
 
 ### Changed
