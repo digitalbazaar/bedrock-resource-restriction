@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 7.0.0 - 2022-03-xx
+## 7.0.0 - 2022-03-01
 
 ### Changed
 - **BREAKING**: Update peer dependencies:
