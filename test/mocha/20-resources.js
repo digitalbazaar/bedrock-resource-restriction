@@ -1,18 +1,17 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-const {delay} = require('bedrock').util;
-const database = require('bedrock-mongodb');
-const {resources, restrictions} = require('bedrock-resource-restriction');
-const uuid = require('uuid-random');
-const {mockAcquisition} = require('./mock.data.js');
-
-const {
+import * as bedrock from '@bedrock/core';
+import * as database from '@bedrock/mongodb';
+import {
   ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult, generateId, cleanDB,
   insertRecord
-} = require('./helpers.js');
+} from './helpers.js';
+import {mockAcquisition} from './mock.data.js';
+import {resources, restrictions} from '@bedrock/resource-restriction';
+import uuid from 'uuid-random';
+
+const {delay} = bedrock.util;
 
 describe('Resources', function() {
   it('should authorize a request with no restrictions', async function() {

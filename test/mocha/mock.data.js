@@ -1,13 +1,10 @@
 /*!
- * Copyright (c) 2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2021-2022 Digital Bazaar, Inc. All rights reserved.
  */
-
-'use strict';
-
-const data = {};
+export const mockData = {};
 
 // mock product IDs and reverse lookup for webkms/edv/etc service products
-data.productIdMap = new Map();
+mockData.productIdMap = new Map();
 
 const products = [{
   // Use default webkms dev `id` and `serviceId`
@@ -21,12 +18,12 @@ const products = [{
 }];
 
 for(const product of products) {
-  data.productIdMap.set(product.id, product);
-  data.productIdMap.set(product.name, product);
+  mockData.productIdMap.set(product.id, product);
+  mockData.productIdMap.set(product.name, product);
 }
 
 const now = Date.now();
-const mockAcquisition = {
+export const mockAcquisition = {
   meta: {
     created: now,
     updated: now
@@ -50,5 +47,3 @@ const mockAcquisition = {
     ttl: 2592000000
   }
 };
-
-module.exports = {data, mockAcquisition};

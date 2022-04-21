@@ -1,5 +1,13 @@
 # bedrock-resource-restriction ChangeLog
 
+## 10.0.0 - 2022-04-xx
+
+### Changed
+- **BREAKING**: Rename package to `@bedrock/resource-restriction`.
+- **BREAKING**: Convert to module (ESM).
+- **BREAKING**: Remove default export.
+- **BREAKING**: Require node 14.x.
+
 ## 9.0.0 - 2022-03-17
 
 ### Changed

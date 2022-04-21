@@ -1,13 +1,10 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-const {restrictions} = require('bedrock-resource-restriction');
-
-const {
+import {
   ACQUIRER_ID, RESOURCES, ZONES, assertResourceRestriction, generateId, cleanDB
-} = require('./helpers.js');
+} from './helpers.js';
+import {restrictions} from '@bedrock/resource-restriction';
 
 describe('Restrictions', function() {
   it('should insert a restriction', async function() {
