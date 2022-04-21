@@ -1,18 +1,16 @@
 /*!
- * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import * as database from '@bedrock/mongodb';
+import uuid from 'uuid-random';
 
-const database = require('bedrock-mongodb');
-const uuid = require('uuid-random');
-
-exports.generateId = async () => {
+export async function generateId() {
   return uuid();
-};
+}
 
-exports.ACQUIRER_ID = uuid();
+export const ACQUIRER_ID = uuid();
 
-exports.RESOURCES = {
+export const RESOURCES = {
   APPLE: uuid(),
   ORANGE: uuid(),
   KIWI: uuid(),
@@ -26,12 +24,12 @@ exports.RESOURCES = {
   PLUM: uuid()
 };
 
-exports.ZONES = {
+export const ZONES = {
   ONE: uuid(),
   TWO: uuid()
 };
 
-exports.assertCheckResult = (result, expectedResult) => {
+export function assertCheckResult(result, expectedResult) {
   should.exist(result);
   result.should.be.an('object');
   result.should.have.property('authorized');
@@ -43,9 +41,9 @@ exports.assertCheckResult = (result, expectedResult) => {
   if(expectedResult) {
     result.should.deep.equal(expectedResult);
   }
-};
+}
 
-exports.assertResourceRestriction = (actual, expected) => {
+export function assertResourceRestriction(actual, expected) {
   should.exist(actual);
   actual.should.be.an('object');
   actual.should.have.property('restriction');
@@ -55,15 +53,15 @@ exports.assertResourceRestriction = (actual, expected) => {
   if(expected.restriction) {
     actual.restriction.should.deep.equal(expected.restriction);
   }
-};
+}
 
-exports.insertRecord = async ({record, collectionName}) => {
+export async function insertRecord({record, collectionName}) {
   const collection = database.collections[collectionName];
   await collection.insertOne(record, database.writeOptions);
-};
+}
 
-exports.cleanDB = async () => {
+export async function cleanDB() {
   await database.collections['tokenizer-tokenizer'].deleteMany({});
   await database.collections['resource-restriction-restriction'].deleteMany({});
   await database.collections['resource-restriction-acquisition'].deleteMany({});
-};
+}
