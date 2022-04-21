@@ -57,7 +57,7 @@ export function assertResourceRestriction(actual, expected) {
 
 export async function insertRecord({record, collectionName}) {
   const collection = database.collections[collectionName];
-  await collection.insertOne(record, database.writeOptions);
+  await collection.insertOne(record);
 }
 
 export async function cleanDB() {
