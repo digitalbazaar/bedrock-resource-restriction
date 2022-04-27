@@ -25,7 +25,7 @@
     "@bedrock/meter-usage-reporter": "^6.0.0",
     "@bedrock/mongodb": "^9.0.0",
     "@bedrock/package-manager": "^2.0.0",
-    "@bedrock/resource-restriction": "file://..",
+    "@bedrock/resource-restriction": "file:..",
     "@bedrock/security-context": "^6.0.0",
     "@bedrock/server": "^4.0.0",
     "@bedrock/ssm-mongodb": "^8.0.0",
