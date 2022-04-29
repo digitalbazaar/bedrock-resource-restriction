@@ -1,5 +1,15 @@
 # bedrock-resource-restriction ChangeLog
 
+## 11.0.0 - 2022-04-xx
+
+### Changed
+- **BREAKING**: Update peer deps:
+  - `@bedrock/core@6`
+  - `@bedrock/https-agent@4`
+  - `@bedrock/jsonld-document-loader@3`
+  - `@bedrock/mongodb@10`
+  - `@bedrock/tokenizer@8`.
+
 ## 10.0.0 - 2022-04-21
 
 ### Changed
