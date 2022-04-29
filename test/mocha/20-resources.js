@@ -1,8 +1,8 @@
 /*!
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
-import * as bedrock from '@bedrock/core';
 import * as database from '@bedrock/mongodb';
+import delay from 'delay';
 import {
   ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult, generateId, cleanDB,
   insertRecord
@@ -10,8 +10,6 @@ import {
 import {mockAcquisition} from './mock.data.js';
 import {resources, restrictions} from '@bedrock/resource-restriction';
 import uuid from 'uuid-random';
-
-const {delay} = bedrock.util;
 
 describe('Resources', function() {
   it('should authorize a request with no restrictions', async function() {
