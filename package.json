@@ -31,11 +31,11 @@
     "moment": "^2.29.1"
   },
   "peerDependencies": {
-    "@bedrock/core": "^5.0.0",
-    "@bedrock/https-agent": "^3.0.0",
-    "@bedrock/jsonld-document-loader": "^2.0.0",
-    "@bedrock/mongodb": "^9.0.0",
-    "@bedrock/tokenizer": "^7.0.0"
+    "@bedrock/core": "^6.0.0",
+    "@bedrock/https-agent": "^4.0.0",
+    "@bedrock/jsonld-document-loader": "^3.0.0",
+    "@bedrock/mongodb": "^10.0.0",
+    "@bedrock/tokenizer": "^8.0.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
