@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 11.1.0 - 2022-06-xx
+
+### Added
+- Add backwards-compatible `sequence` value to acquisition records for
+  better optimized change tracking.
+
 ## 11.0.0 - 2022-04-29
 
 ### Changed
