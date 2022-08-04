@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 12.0.0 - 2022-08-xx
+## 12.0.0 - 2022-08-04
 
 ### Changed
 - **BREAKING**: Require node 16.x.
