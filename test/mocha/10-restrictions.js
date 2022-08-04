@@ -2,7 +2,8 @@
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
 import {
-  ACQUIRER_ID, RESOURCES, ZONES, assertResourceRestriction, generateId, cleanDB
+  ACQUIRER_ID, assertResourceRestriction,
+  cleanDB, generateId, RESOURCES, ZONES
 } from './helpers.js';
 import {restrictions} from '@bedrock/resource-restriction';
 
