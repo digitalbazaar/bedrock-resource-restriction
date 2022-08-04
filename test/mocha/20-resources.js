@@ -2,13 +2,13 @@
  * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
  */
 import * as database from '@bedrock/mongodb';
-import delay from 'delay';
 import {
-  ACQUIRER_ID, RESOURCES, ZONES, assertCheckResult, generateId, cleanDB,
-  insertRecord
+  ACQUIRER_ID, assertCheckResult, cleanDB, generateId, insertRecord,
+  RESOURCES, ZONES
 } from './helpers.js';
-import {mockAcquisition} from './mock.data.js';
 import {resources, restrictions} from '@bedrock/resource-restriction';
+import delay from 'delay';
+import {mockAcquisition} from './mock.data.js';
 import uuid from 'uuid-random';
 
 describe('Resources', function() {
