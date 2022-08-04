@@ -3,6 +3,7 @@
 ## 12.0.0 - 2022-08-xx
 
 ### Changed
+- **BREAKING**: Require node 16.x.
 - **BREAKING**: Update peer deps:
   - `@bedrock/tokenizer@9`.
 
