@@ -1,5 +1,15 @@
 # bedrock-resource-restriction ChangeLog
 
+## 12.1.0 - 2022-08-xx
+
+### Added
+- Add optional `now` parameters to acquire/release/check API to assist
+  in unit testing.
+
+### Fixed
+- Fix max restriction TTL calculation, ensuring that acquired resources
+  will be tracked for the longest applicable TTL.
+
 ## 12.0.0 - 2022-08-04
 
 ### Changed

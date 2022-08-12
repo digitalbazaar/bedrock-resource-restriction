@@ -232,6 +232,145 @@ describe('Resources', function() {
       assertCheckResult(result, expectedResult);
     });
 
+  it('should allow acquisitions with multiple time restrictions over time',
+    async function() {
+      // add monthly restriction
+      await restrictions.insert({
+        restriction: {
+          id: await generateId(),
+          zone: ZONES.ONE,
+          resource: RESOURCES.TANGERINE,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 2,
+            duration: 'P30D'
+          }
+        }
+      });
+      // add minute restriction
+      await restrictions.insert({
+        restriction: {
+          id: await generateId(),
+          zone: ZONES.TWO,
+          resource: RESOURCES.TANGERINE,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 1,
+            duration: 'PT1M'
+          }
+        }
+      });
+
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      // `acquisitionTtl` is only a default (it should not be used, because the
+      // restriction types indicate the TTL)
+      const acquisitionTtl = 30000;
+
+      // acquire resource
+      {
+        const request = [
+          {resource: RESOURCES.TANGERINE, count: 1, requested: now}
+        ];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // fail to acquire another resource at the same time
+      {
+        const request = [
+          {resource: RESOURCES.TANGERINE, count: 1, requested: now}
+        ];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now});
+        const expectedResult = {
+          authorized: false,
+          excessResources: [{
+            resource: RESOURCES.TANGERINE,
+            count: 1
+          }],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // fail to acquire another resource later but before zone two expiration
+      {
+        const lessThan1MLater = now + 1000 * 59;
+        const request = [{
+          resource: RESOURCES.TANGERINE,
+          count: 1,
+          requested: lessThan1MLater
+        }];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now: lessThan1MLater});
+        const expectedResult = {
+          authorized: false,
+          excessResources: [{
+            resource: RESOURCES.TANGERINE,
+            count: 1
+          }],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // acquire resource after zone two restriction expires
+      {
+        const oneMinuteLater = now + 1000 * 61;
+        const request = [{
+          resource: RESOURCES.TANGERINE,
+          count: 1,
+          requested: oneMinuteLater
+        }];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now: oneMinuteLater});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // fail to acquire another resource later due to zone one restriction
+      {
+        const fiveMinutesLater = now + 1000 * 60 * 5;
+        const request = [{
+          resource: RESOURCES.TANGERINE,
+          count: 1,
+          requested: fiveMinutesLater
+        }];
+        const zones = [ZONES.ONE];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now: fiveMinutesLater});
+        const expectedResult = {
+          authorized: false,
+          excessResources: [{
+            resource: RESOURCES.TANGERINE,
+            count: 1
+          }],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // release resources (to avoid invalidating assertions in
+      // inter-related tests)
+      const request = [{resource: RESOURCES.TANGERINE, count: 2}];
+      await resources.release({acquirerId, request, acquisitionTtl});
+    });
+
   it('should acquire with updated restriction', async function() {
     const id = await generateId();
     await restrictions.insert({
@@ -551,6 +690,8 @@ describe('Resources', function() {
 
     // the difference between when the middle acquisition and the "latest"
     // should be 1 per the above parameters used when acquiring them
+    /* NOTE: This test requires that no other test have acquired resources
+    for longer, causing a longer `expires` value in the response. */
     const diff = latestExpires - middleExpires;
     const expectedDiff = 1;
     diff.should.equal(expectedDiff);

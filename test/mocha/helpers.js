@@ -21,7 +21,8 @@ export const RESOURCES = {
   CUCUMBER: uuid(),
   ASPARAGUS: uuid(),
   LIME: uuid(),
-  PLUM: uuid()
+  PLUM: uuid(),
+  TANGERINE: uuid()
 };
 
 export const ZONES = {
