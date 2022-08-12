@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 12.1.0 - 2022-08-xx
+## 12.1.0 - 2022-08-12
 
 ### Added
 - Add optional `now` parameters to acquire/release/check API to assist
