@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 13.0.0 -
+
+### Changed
+- **BREAKING**: Upgraded `@bedrock/mongodb` & `@bedrock/tokenizer` to be compative with node mongo driver 4.
+- **BREAKING**: Changed various mongodb related results to use mongo driver 4 API.
+
 ## 12.1.0 - 2022-08-12
 
 ### Added
