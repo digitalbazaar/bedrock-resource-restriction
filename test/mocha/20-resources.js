@@ -897,7 +897,8 @@ describe('Resources Database Tests', function() {
       newTokenized[0].tokenizerId = '371593a1-a5aa-4346-8663-dba5ebc854b9';
 
       const {executionStats} = await resources._updateAcquisitionRecord({
-        acquirerId, acquisitionRecord: mockAcquisition, newTokenized, expires,
+        acquirerId, acquisitionRecord: mockAcquisition, newTokenized,
+        expires: expires.getTime(),
         ttl, explain: true
       });
       executionStats.nReturned.should.equal(1);
