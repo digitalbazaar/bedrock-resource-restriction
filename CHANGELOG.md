@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 12.1.1 - 2023-01-dd
+## 12.1.1 - 2023-01-15
 
 ### Fixed
 - Do not modify internal structure of acquisition `record` once
