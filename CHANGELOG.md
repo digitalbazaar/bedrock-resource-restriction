@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 12.1.1 - 2023-01-dd
+
+### Fixed
+- Do not modify internal structure of acquisition `record` once
+  returned to convert `expires` into ms since the epoch.
+
 ## 12.1.0 - 2022-08-12
 
 ### Added
