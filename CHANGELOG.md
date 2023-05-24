@@ -1,5 +1,16 @@
 # bedrock-resource-restriction ChangeLog
 
+## 13.0.0 - 2023-05-TBD
+
+### Changed
+- **BREAKING**: Update `getAll()` API to take `query` param instead of `zone`
+  and `resource`.
+- **BREAKING**: Update the return value of restrictions `getAll()` API to
+  include propertes `records`, `limit`, `offset`, and `count`.
+- **BREAKING**: Paginate results of restrictions `getAll()` API using `skip()`
+  and `limit()` methods. If no query params `limit` and `offset` are specified,
+  then default values 10 and 0 will be used respectively.
+
 ## 12.1.1 - 2023-01-15
 
 ### Fixed
