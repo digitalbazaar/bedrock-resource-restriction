@@ -198,10 +198,11 @@ describe('Restrictions', function() {
     await restrictions.insert({
       restriction: mockRestriction2
     });
-    const {records, count} = await restrictions.getAll({
+    const query = {
       zone: ZONES.ONE,
       resource: RESOURCES.MANGO
-    });
+    };
+    const {records, count} = await restrictions.getAll({query});
     should.exist(records);
     records.should.be.an('array');
     records.length.should.equal(2);
@@ -376,10 +377,11 @@ describe('Restrictions', function() {
     await restrictions.insert({
       restriction: mockRestriction2
     });
-    const {records: restrictionsArray} = await restrictions.getAll({
+    const query = {
       zone: ZONES.ONE,
       resource: RESOURCES.ASPARAGUS
-    });
+    };
+    const {records: restrictionsArray} = await restrictions.getAll({query});
     should.exist(restrictionsArray);
     restrictionsArray.should.be.an('array');
     restrictionsArray.length.should.equal(2);
@@ -396,10 +398,7 @@ describe('Restrictions', function() {
     let err;
     try {
       // try getting the removed restriction, this should return an empty array
-      ({records: restrictionsArray2} = await restrictions.getAll({
-        zone: ZONES.ONE,
-        resource: RESOURCES.ASPARAGUS
-      }));
+      ({records: restrictionsArray2} = await restrictions.getAll({query}));
     } catch(e) {
       err = e;
     }
@@ -563,11 +562,14 @@ describe('Restrictions Database Tests', function() {
       });
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in getAll()', async function() {
+      const query = {
+        zone: ZONES.ONE,
+        resource: RESOURCES.MANGO
+      };
       // finds all records that match the 'restriction.zone' and
       // 'restriction.resource' query since it is not a unique index.
       const {executionStats} = await restrictions.getAll({
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO,
+        query,
         explain: true
       });
       executionStats.nReturned.should.equal(2);
