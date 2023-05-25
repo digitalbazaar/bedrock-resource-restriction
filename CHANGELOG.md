@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 13.0.0 - 2023-05-TBD
+## 13.0.0 - 2023-05-25
 
 ### Changed
 - **BREAKING**: Update `getAll()` API to take `query` param instead of `zone`
