@@ -199,8 +199,8 @@ describe('Restrictions', function() {
       restriction: mockRestriction2
     });
     const query = {
-      zone: ZONES.ONE,
-      resource: RESOURCES.MANGO
+      'restriction.zone': ZONES.ONE,
+      'restriction.resource': RESOURCES.MANGO
     };
     const {records, count} = await restrictions.getAll({query});
     should.exist(records);
@@ -378,8 +378,8 @@ describe('Restrictions', function() {
       restriction: mockRestriction2
     });
     const query = {
-      zone: ZONES.ONE,
-      resource: RESOURCES.ASPARAGUS
+      'restriction.zone': ZONES.ONE,
+      'restriction.resource': RESOURCES.ASPARAGUS
     };
     const {records: restrictionsArray} = await restrictions.getAll({query});
     should.exist(restrictionsArray);
@@ -563,8 +563,8 @@ describe('Restrictions Database Tests', function() {
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in getAll()', async function() {
       const query = {
-        zone: ZONES.ONE,
-        resource: RESOURCES.MANGO
+        'restriction.zone': ZONES.ONE,
+        'restriction.resource': RESOURCES.MANGO
       };
       // finds all records that match the 'restriction.zone' and
       // 'restriction.resource' query since it is not a unique index.

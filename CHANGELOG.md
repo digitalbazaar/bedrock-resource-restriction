@@ -8,8 +8,8 @@
 - **BREAKING**: Update the return value of restrictions `getAll()` API to
   include propertes `records`, `limit`, `offset`, and `count`.
 - **BREAKING**: Paginate results of restrictions `getAll()` API using `skip()`
-  and `limit()` methods. If no query params `limit` and `offset` are specified,
-  then default values 10 and 0 will be used respectively.
+  and `limit()` methods. If no `limit` and `offset` params are specified in
+  `getAll()`, then default values 10 and 0 will be used respectively.
 
 ## 12.1.1 - 2023-01-15
 
