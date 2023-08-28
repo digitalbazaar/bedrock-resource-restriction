@@ -5,6 +5,9 @@
 ### Changed
 - **BREAKING**: Drop support for Node.js 16.
 
+### Removed
+- Remove usage of deprecated `database.writeOptions`.
+
 ## 13.0.0 - 2023-05-25
 
 ### Changed
