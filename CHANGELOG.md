@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 14.0.0 - 2023-08-TBD
+## 14.0.0 - 2023-08-30
 
 ### Changed
 - **BREAKING**: Drop support for Node.js 16.
