@@ -1,5 +1,12 @@
 # bedrock-resource-restriction ChangeLog
 
+## 15.0.0 - 2023-09-xx
+
+### Changed
+- **BREAKING**: Update peer deps:
+  - Use `@bedrock/jsonld-document-loader@4`. This version requires Node.js 18+.
+  - Use `@bedrock/tokenizer@10`. This version requires Node.js 18+.
+
 ## 14.0.0 - 2023-08-30
 
 ### Changed
