@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 15.0.0 - 2023-09-xx
+## 15.0.0 - 2023-09-25
 
 ### Changed
 - **BREAKING**: Update peer deps:
