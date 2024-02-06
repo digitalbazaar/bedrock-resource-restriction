@@ -1,5 +1,14 @@
 # bedrock-resource-restriction ChangeLog
 
+## 16.0.0 - 2024-02-xx
+
+### Added
+- **BREAKING**: Add unique compound index on `restriction.zone`,
+  `restriction.resource`, `restiction.methodOptions.limit`, and
+  `restiction.methodOptions.duration` to ensure uniqueness on restrictions. This
+  will cause errors in existing deployments if duplicate restrictions already
+  exist.
+
 ## 15.0.0 - 2023-09-25
 
 ### Changed
