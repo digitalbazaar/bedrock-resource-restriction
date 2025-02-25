@@ -1,5 +1,21 @@
 # bedrock-resource-restriction ChangeLog
 
+## 15.1.0 - 2025-mm-dd
+
+### Added
+- Add two new features for restrictions to use:
+  - Restriction functions will now receive `getAcquisitionMap({resourceIds})`
+    to enable requesting specific, well-known (to the restriction
+    implementation), and previously acquired resources that might
+    not be in the current acquisition request but are relevant to it.
+  - Restriction functions can now return an optional `trackedResources` array
+    that, if present, must specify all the resources in the request that are
+    to be tracked (this must include the resource that triggered the
+    restriction if that is desirable, otherwise it will not be tracked). If
+    this feature is not used, `trackedResources` will default to an array
+    containing only the resource that triggered the restriction, as was
+    done in previous versions.
+
 ## 15.0.0 - 2023-09-25
 
 ### Changed
