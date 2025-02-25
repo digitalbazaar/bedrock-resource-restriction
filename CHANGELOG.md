@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 15.1.0 - 2025-mm-dd
+## 15.1.0 - 2025-02-25
 
 ### Added
 - Add two new features for restrictions to use:
