@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2024 Digital Bazaar, Inc. All rights reserved.
  */
 import * as database from '@bedrock/mongodb';
 import {
@@ -695,6 +695,89 @@ describe('Resources', function() {
     const diff = latestExpires - middleExpires;
     const expectedDiff = 1;
     diff.should.equal(expectedDiff);
+  });
+
+  it('should use "getAcquisitionMap" in a restriction', async function() {
+    // create restriction; use `limitOneGeographicalRegion`;
+    // see test.js for this restriction implementation with uses
+    // `getAcquisitionMap` internally
+    const restriction = {
+      id: await generateId(),
+      zone: ZONES.ONE,
+      resource: RESOURCES.GEOGRAPHICAL_ANY,
+      method: 'limitOneGeographicalRegion',
+      methodOptions: {}
+    };
+    await restrictions.insert({restriction});
+
+    // should authorize restriction for `GEOGRAPHICAL_EAST`
+    {
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      const request = [{
+        resource: RESOURCES.GEOGRAPHICAL_ANY, count: 1, requested: now
+      }, {
+        resource: RESOURCES.GEOGRAPHICAL_EAST, count: 1, requested: now
+      }];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE];
+      const result = await resources.acquire(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedResult = {
+        authorized: true,
+        excessResources: [],
+        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY]
+      };
+      assertCheckResult(result, expectedResult);
+    }
+
+    // should deny request because it tries to acquire `GEOGRAPHICAL_WEST`
+    // and a resource in `GEOGRAPHICAL_EAST` is already acquired and this
+    // restriction only allows resources in only one geographical region to be
+    // acquired at a time
+    {
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      const request = [{
+        resource: RESOURCES.GEOGRAPHICAL_ANY, count: 1, requested: now
+      }, {
+        resource: RESOURCES.GEOGRAPHICAL_WEST, count: 1, requested: now
+      }];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE];
+      const result = await resources.check(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedResult = {
+        authorized: false,
+        excessResources: [{
+          resource: RESOURCES.GEOGRAPHICAL_WEST,
+          count: 1
+        }],
+        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY]
+      };
+      assertCheckResult(result, expectedResult);
+    }
+
+    // should authorize restriction for GEO EAST again
+    {
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      const request = [{
+        resource: RESOURCES.GEOGRAPHICAL_ANY, count: 1, requested: now
+      }, {
+        resource: RESOURCES.GEOGRAPHICAL_EAST, count: 1, requested: now
+      }];
+      const acquisitionTtl = 30000;
+      const zones = [ZONES.ONE];
+      const result = await resources.acquire(
+        {acquirerId, request, acquisitionTtl, zones});
+      const expectedResult = {
+        authorized: true,
+        excessResources: [],
+        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY]
+      };
+      assertCheckResult(result, expectedResult);
+    }
   });
 
   // only run this test during CI as it is a long-running test

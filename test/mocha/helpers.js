@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
  */
 import * as database from '@bedrock/mongodb';
 import uuid from 'uuid-random';
@@ -22,7 +22,10 @@ export const RESOURCES = {
   ASPARAGUS: uuid(),
   LIME: uuid(),
   PLUM: uuid(),
-  TANGERINE: uuid()
+  TANGERINE: uuid(),
+  GEOGRAPHICAL_ANY: 'urn:geo:any',
+  GEOGRAPHICAL_EAST: 'urn:geo:east',
+  GEOGRAPHICAL_WEST: 'urn:geo:west'
 };
 
 export const ZONES = {

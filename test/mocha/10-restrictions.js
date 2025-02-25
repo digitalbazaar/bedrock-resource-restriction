@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2022 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
  */
 import {
   ACQUIRER_ID, assertResourceRestriction,
@@ -265,7 +265,8 @@ describe('Restrictions', function() {
       acquirerId: ACQUIRER_ID,
       acquired,
       request,
-      zones
+      zones,
+      getAcquisitionMap: () => new Map(acquired)
     });
     const expectedResult = {
       authorized: true,
@@ -290,7 +291,8 @@ describe('Restrictions', function() {
       result = await matches.restrictions[0].apply({
         acquired,
         request,
-        zones
+        zones,
+        getAcquisitionMap: () => new Map(acquired)
       });
     } catch(e) {
       err = e;
@@ -314,7 +316,8 @@ describe('Restrictions', function() {
       acquirerId: ACQUIRER_ID,
       acquired,
       request,
-      zones
+      zones,
+      getAcquisitionMap: () => new Map(acquired)
     });
     const expectedResult = {
       authorized: true,
@@ -338,7 +341,8 @@ describe('Restrictions', function() {
       acquirerId: ACQUIRER_ID,
       acquired,
       request,
-      zones
+      zones,
+      getAcquisitionMap: () => new Map(acquired)
     });
     const expectedResult = {
       authorized: false,
