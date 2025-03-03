@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 15.1.1 - 2025-mm-dd
+
+### Fixed
+- Return passed `record` instead of resulting record from mongodb calls to
+  enable using newer mongodb driver.
+
 ## 15.1.0 - 2025-02-25
 
 ### Added
