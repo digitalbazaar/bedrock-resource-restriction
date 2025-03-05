@@ -1,6 +1,6 @@
 {
   "name": "@bedrock/resource-restriction",
-  "version": "15.1.2-0",
+  "version": "15.1.2",
   "type": "module",
   "description": "Bedrock Resource Restriction",
   "main": "./lib/index.js",
