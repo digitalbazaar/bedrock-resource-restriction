@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 15.1.2 - 2025-mm-dd
+## 15.1.2 - 2025-03-05
 
 ### Fixed
 - Return passed `records` instead of `result.ops` resulting from bulk
