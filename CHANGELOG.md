@@ -1,5 +1,11 @@
 # bedrock-resource-restriction ChangeLog
 
+## 15.1.2 - 2025-mm-dd
+
+### Fixed
+- Return passed `records` instead of `result.ops` resulting from bulk
+  write mongodb calls to enable using newer mongodb driver.
+
 ## 15.1.1 - 2025-03-04
 
 ### Fixed
