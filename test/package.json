@@ -23,7 +23,7 @@
     "@bedrock/meter": "^5.0.0",
     "@bedrock/meter-http": "^13.0.0",
     "@bedrock/meter-usage-reporter": "^9.0.3",
-    "@bedrock/mongodb": "digitalbazaar/bedrock-mongodb#new-driver-v6",
+    "@bedrock/mongodb": "^10.2.0",
     "@bedrock/package-manager": "^3.0.0",
     "@bedrock/resource-restriction": "file:..",
     "@bedrock/security-context": "^9.0.0",
