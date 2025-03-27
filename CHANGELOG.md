@@ -1,5 +1,9 @@
 # bedrock-resource-restriction ChangeLog
 
+## 16.0.0 - 2025-03-xx
+
+- **BREAKING**: Require Node.js >=20.
+
 ## 15.1.2 - 2025-03-05
 
 ### Fixed
