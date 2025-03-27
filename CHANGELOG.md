@@ -2,7 +2,21 @@
 
 ## 16.0.0 - 2025-03-xx
 
+### Changed
 - **BREAKING**: Require Node.js >=20.
+- Update dependencies.
+  - `moment@2.30.1`.
+- Update peer dependencies.
+  - `@bedrock/core@6.3.0`.
+  - `@bedrock/https-agent@4.1.0`.
+  - `@bedrock/jsonld-document-loader@5.2.0`.
+  - **BREAKING**: `@bedrock/mongodb@11`.
+    - Use MongoDB driver 6.x and update error names and details.
+    - See changelog for details.
+  - **BREAKING**: `@bedrock/tokenizer@11`.
+    - Updated for `@bedrock/mongodb@11`.
+- Update dev dependencies.
+- Update test dependencies.
 
 ## 15.1.2 - 2025-03-05
 
