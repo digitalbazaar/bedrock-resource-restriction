@@ -7,8 +7,8 @@ import {
   RESOURCES, ZONES
 } from './helpers.js';
 import {resources, restrictions} from '@bedrock/resource-restriction';
-import delay from 'delay';
 import {mockAcquisition} from './mock.data.js';
+import {setTimeout} from 'node:timers/promises';
 import uuid from 'uuid-random';
 
 describe('Resources', function() {
@@ -841,7 +841,7 @@ describe('Resources', function() {
       }
 
       // wait for ttl-based expiration period
-      await delay(seconds * 1000);
+      await setTimeout(seconds * 1000);
 
       // acquire second resource
       {
@@ -931,7 +931,7 @@ describe('Resources', function() {
       // every 60 seconds but we don't know when, so we need to allow for two
       // full 60 second cycles + time for the record removal to occur to ensure
       // the record is cleaned up; hence we wait for 2 minutes + 10 seconds)
-      await delay((60 * 2 + 10) * 1000);
+      await setTimeout((60 * 2 + 10) * 1000);
 
       // check to see that the record has been removed
       const query = {'acquisition.acquirerId': acquirerId};
