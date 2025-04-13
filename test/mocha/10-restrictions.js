@@ -533,10 +533,17 @@ describe('Restrictions Database Tests', function() {
         executionStats.nReturned.should.equal(1);
         executionStats.totalKeysExamined.should.equal(1);
         executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-        executionStats.executionStages.inputStage.inputStage.keyPattern
-          .should.eql({'restriction.id': 1});
+        const {executionStages: targetStage} = executionStats;
+        // only mongodb 8+ has 'EXPRESS_IXSCAN'
+        if(targetStage.stage === 'EXPRESS_IXSCAN') {
+          targetStage.keyPattern.should.eql(
+            '{ restriction.id: 1 }');
+        } else {
+          targetStage = executionStages.inputStage.inputStage;
+          targetStage.stage.should.equal('IXSCAN');
+          targetStage.keyPattern.should.eql(
+            {'restriction.id': 1});
+        }
       });
     it(`is properly indexed for 'restriction.id' in get()`,
       async function() {
@@ -559,10 +566,17 @@ describe('Restrictions Database Tests', function() {
         executionStats.nReturned.should.equal(1);
         executionStats.totalKeysExamined.should.equal(1);
         executionStats.totalDocsExamined.should.equal(1);
-        executionStats.executionStages.inputStage.inputStage.stage
-          .should.equal('IXSCAN');
-        executionStats.executionStages.inputStage.inputStage.
-          keyPattern.should.eql({'restriction.id': 1});
+        const {executionStages: targetStage} = executionStats;
+        // only mongodb 8+ has 'EXPRESS_IXSCAN'
+        if(targetStage.stage === 'EXPRESS_IXSCAN') {
+          targetStage.keyPattern.should.eql(
+            '{ restriction.id: 1 }');
+        } else {
+          targetStage = executionStages.inputStage.inputStage;
+          targetStage.stage.should.equal('IXSCAN');
+          targetStage.keyPattern.should.eql(
+            {'restriction.id': 1});
+        }
       });
     it(`is properly indexed for 'restriction.zone' and 'restriction.resource'` +
       'in getAll()', async function() {
