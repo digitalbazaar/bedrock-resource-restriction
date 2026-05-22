@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2024 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2026 Digital Bazaar, Inc.
  */
 import * as database from '@bedrock/mongodb';
 import {
@@ -368,6 +368,166 @@ describe('Resources', function() {
       // release resources (to avoid invalidating assertions in
       // inter-related tests)
       const request = [{resource: RESOURCES.TANGERINE, count: 2}];
+      await resources.release({acquirerId, request, acquisitionTtl});
+    });
+
+  it('should expire older individual acquisitions over time',
+    async function() {
+      // add monthly restriction
+      await restrictions.insert({
+        restriction: {
+          id: await generateId(),
+          zone: ZONES.ONE,
+          resource: RESOURCES.POTATO,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 3,
+            duration: 'P30D'
+          }
+        }
+      });
+      // add minute restriction
+      await restrictions.insert({
+        restriction: {
+          id: await generateId(),
+          zone: ZONES.TWO,
+          resource: RESOURCES.POTATO,
+          method: 'limitOverDuration',
+          methodOptions: {
+            limit: 2,
+            duration: 'PT1M'
+          }
+        }
+      });
+
+      const now = Date.now();
+      const acquirerId = ACQUIRER_ID;
+      // `acquisitionTtl` is only a default (it should not be used, because the
+      // restriction types indicate the TTL)
+      const acquisitionTtl = 30000;
+
+      // acquire resource
+      {
+        const request = [
+          {resource: RESOURCES.POTATO, count: 1, requested: now}
+        ];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // acquire resource another resource half way into the shorter period
+      {
+        const thirtySecsLater = now + 1000 * 31;
+        const request = [{
+          resource: RESOURCES.POTATO,
+          count: 1,
+          requested: thirtySecsLater
+        }];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now: thirtySecsLater});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+
+        // fail to acquire another resource half way into the shorter period
+        {
+          const request = [{
+            resource: RESOURCES.POTATO,
+            count: 1,
+            requested: thirtySecsLater
+          }];
+          const zones = [ZONES.ONE, ZONES.TWO];
+          const result = await resources.acquire(
+            {acquirerId, request, acquisitionTtl, zones, now: thirtySecsLater});
+          const expectedResult = {
+            authorized: false,
+            excessResources: [{
+              resource: RESOURCES.POTATO,
+              count: 1
+            }],
+            untrackedResources: []
+          };
+          assertCheckResult(result, expectedResult);
+        }
+      }
+
+      // acquire resource another resource after only the first should expire
+      {
+        const oneMinuteLater = now + 1000 * 61;
+        const request = [{
+          resource: RESOURCES.POTATO,
+          count: 1,
+          requested: oneMinuteLater
+        }];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now: oneMinuteLater});
+        const expectedResult = {
+          authorized: true,
+          excessResources: [],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // fail to acquire another resource after only the first should expire
+      {
+        const oneMinuteLater = now + 1000 * 61;
+        const request = [{
+          resource: RESOURCES.POTATO,
+          count: 1,
+          requested: oneMinuteLater
+        }];
+        const zones = [ZONES.ONE, ZONES.TWO];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now: oneMinuteLater});
+        const expectedResult = {
+          authorized: false,
+          excessResources: [{
+            resource: RESOURCES.POTATO,
+            count: 1
+          }],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // fail to acquire another resource later due to zone one restriction
+      {
+        const fiveMinutesLater = now + 1000 * 60 * 5;
+        const request = [{
+          resource: RESOURCES.POTATO,
+          count: 1,
+          requested: fiveMinutesLater
+        }];
+        const zones = [ZONES.ONE];
+        const result = await resources.acquire(
+          {acquirerId, request, acquisitionTtl, zones, now: fiveMinutesLater});
+        const expectedResult = {
+          authorized: false,
+          excessResources: [{
+            resource: RESOURCES.POTATO,
+            count: 1
+          }],
+          untrackedResources: []
+        };
+        assertCheckResult(result, expectedResult);
+      }
+
+      // release resources (to avoid invalidating assertions in
+      // inter-related tests)
+      const request = [{resource: RESOURCES.POTATO, count: 3}];
       await resources.release({acquirerId, request, acquisitionTtl});
     });
 

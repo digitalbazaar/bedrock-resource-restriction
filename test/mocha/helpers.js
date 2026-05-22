@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2026 Digital Bazaar, Inc.
  */
 import * as database from '@bedrock/mongodb';
 import uuid from 'uuid-random';
@@ -12,16 +12,17 @@ export const ACQUIRER_ID = uuid();
 
 export const RESOURCES = {
   APPLE: uuid(),
-  ORANGE: uuid(),
-  KIWI: uuid(),
+  ASPARAGUS: uuid(),
   CARROT: uuid(),
   CHERRY: uuid(),
-  MANGO: uuid(),
-  STRAWBERRY: uuid(),
   CUCUMBER: uuid(),
-  ASPARAGUS: uuid(),
+  KIWI: uuid(),
   LIME: uuid(),
+  MANGO: uuid(),
+  ORANGE: uuid(),
   PLUM: uuid(),
+  POTATO: uuid(),
+  STRAWBERRY: uuid(),
   TANGERINE: uuid(),
   GEOGRAPHICAL_ANY: 'urn:geo:any',
   GEOGRAPHICAL_EAST: 'urn:geo:east',
