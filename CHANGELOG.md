@@ -1,5 +1,15 @@
 # bedrock-resource-restriction ChangeLog
 
+## 16.1.0 - 2026-mm-dd
+
+### Added
+- Add ability to pass `acquirerMeta` object to acquisition and check APIs. If
+  given, this object will also be passed to restrictions so it can be used to
+  apply specific rules that are based on acquirer properties.
+
+### Changed
+- Update expected node.js version to >=22.
+
 ## 16.0.0 - 2025-03-27
 
 ### Changed
