@@ -26,7 +26,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [RESOURCES.APPLE],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -65,7 +65,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [RESOURCES.APPLE],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -97,7 +97,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -119,7 +119,7 @@ describe('Resources', function() {
         count: 1
       }],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -138,7 +138,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -181,7 +181,7 @@ describe('Resources', function() {
         count: 1
       }],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -234,7 +234,7 @@ describe('Resources', function() {
           count: 1
         }],
         untrackedResources: [],
-        acquirerMetaInsufficient: false
+        insufficientAcquirerMeta: false
       };
       assertCheckResult(result, expectedResult);
     });
@@ -286,7 +286,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -306,7 +306,7 @@ describe('Resources', function() {
             count: 1
           }],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -329,7 +329,7 @@ describe('Resources', function() {
             count: 1
           }],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -349,7 +349,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -372,7 +372,7 @@ describe('Resources', function() {
             count: 1
           }],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -430,7 +430,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -450,7 +450,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
 
@@ -471,7 +471,7 @@ describe('Resources', function() {
               count: 1
             }],
             untrackedResources: [],
-            acquirerMetaInsufficient: false
+            insufficientAcquirerMeta: false
           };
           assertCheckResult(result, expectedResult);
         }
@@ -492,7 +492,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -515,7 +515,7 @@ describe('Resources', function() {
             count: 1
           }],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -538,7 +538,7 @@ describe('Resources', function() {
             count: 1
           }],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -589,7 +589,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -612,7 +612,7 @@ describe('Resources', function() {
         count: 1
       }],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
     // TODO: get acquisition record and add assertions
@@ -649,7 +649,7 @@ describe('Resources', function() {
         authorized: true,
         excessResources: [],
         untrackedResources: [],
-        acquirerMetaInsufficient: false
+        insufficientAcquirerMeta: false
       };
       assertCheckResult(acquireResult, expectedAcquireResult);
 
@@ -697,7 +697,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(acquireResult, expectedAcquireResult);
 
@@ -791,7 +791,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -825,7 +825,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
 
@@ -911,7 +911,7 @@ describe('Resources', function() {
         authorized: true,
         excessResources: [],
         untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY],
-        acquirerMetaInsufficient: false
+        insufficientAcquirerMeta: false
       };
       assertCheckResult(result, expectedResult);
     }
@@ -939,7 +939,7 @@ describe('Resources', function() {
           count: 1
         }],
         untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY],
-        acquirerMetaInsufficient: false
+        insufficientAcquirerMeta: false
       };
       assertCheckResult(result, expectedResult);
     }
@@ -961,7 +961,7 @@ describe('Resources', function() {
         authorized: true,
         excessResources: [],
         untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY],
-        acquirerMetaInsufficient: false
+        insufficientAcquirerMeta: false
       };
       assertCheckResult(result, expectedResult);
     }
@@ -996,7 +996,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1030,7 +1030,7 @@ describe('Resources', function() {
       authorized: true,
       excessResources: [],
       untrackedResources: [],
-      acquirerMetaInsufficient: false
+      insufficientAcquirerMeta: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1054,7 +1054,7 @@ describe('Resources', function() {
         count: 2
       }],
       untrackedResources: [],
-      acquirerMetaInsufficient: true
+      insufficientAcquirerMeta: true
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1078,7 +1078,7 @@ describe('Resources', function() {
         count: 2
       }],
       untrackedResources: [],
-      acquirerMetaInsufficient: true
+      insufficientAcquirerMeta: true
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1102,7 +1102,7 @@ describe('Resources', function() {
         count: 2
       }],
       untrackedResources: [],
-      acquirerMetaInsufficient: true
+      insufficientAcquirerMeta: true
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1126,7 +1126,7 @@ describe('Resources', function() {
         count: 2
       }],
       untrackedResources: [],
-      acquirerMetaInsufficient: true
+      insufficientAcquirerMeta: true
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1151,7 +1151,7 @@ describe('Resources', function() {
           count: 2
         }],
         untrackedResources: [],
-        acquirerMetaInsufficient: false
+        insufficientAcquirerMeta: false
       };
       assertCheckResult(result, expectedResult);
     });
@@ -1176,7 +1176,7 @@ describe('Resources', function() {
           count: 2
         }],
         untrackedResources: [],
-        acquirerMetaInsufficient: false
+        insufficientAcquirerMeta: false
       };
       assertCheckResult(result, expectedResult);
     });
@@ -1216,7 +1216,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1238,7 +1238,7 @@ describe('Resources', function() {
             count: 1
           }],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1260,7 +1260,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1306,7 +1306,7 @@ describe('Resources', function() {
           authorized: true,
           excessResources: [],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1328,7 +1328,7 @@ describe('Resources', function() {
             count: 1
           }],
           untrackedResources: [],
-          acquirerMetaInsufficient: false
+          insufficientAcquirerMeta: false
         };
         assertCheckResult(result, expectedResult);
       }

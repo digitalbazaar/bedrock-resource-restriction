@@ -115,13 +115,13 @@ async function _limitByAcquirerMembership({
   // if the necessary membership field in `acquirerMeta` is missing, it may
   // be possible for it to be set to `true` if the acquirer takes some action;
   // so return this information up the stack
-  const acquirerMetaInsufficient = acquirerMeta?.[memberField] === undefined;
+  const insufficientAcquirerMeta = acquirerMeta?.[memberField] === undefined;
 
   return {
     authorized: excess === 0,
     excess,
     // check is at a point in time, no need to track
     ttl: 0,
-    acquirerMetaInsufficient
+    insufficientAcquirerMeta
   };
 }
