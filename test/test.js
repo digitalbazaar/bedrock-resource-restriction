@@ -1,5 +1,5 @@
 /*!
- * Copyright (c) 2020-2025 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2026 Digital Bazaar, Inc.
  */
 import * as bedrock from '@bedrock/core';
 import {handlers} from '@bedrock/meter-http';
@@ -36,12 +36,16 @@ bedrock.events.on('bedrock.init', async () => {
     method: 'limitOneGeographicalRegion',
     fn: _limitOneGeographicalRegion
   });
+  restrictions.registerMethod({
+    method: 'limitByAcquirerMembership',
+    fn: _limitByAcquirerMembership
+  });
 });
 
 bedrock.start();
 
 async function _limitOneGeographicalRegion({
-  /*acquirerId, acquired,*/ request,
+  /*acquirerId, acquirerMeta, acquired,*/ request,
   /*zones, restriction, now = Date.now(),*/ getAcquisitionMap
 }) {
   // ensure that all acquisitions will be in the same geographical region...
@@ -85,5 +89,33 @@ async function _limitOneGeographicalRegion({
     // only track the new region, not the "any" geo resource that triggers
     // the restriction
     trackedResources: [newRegion]
+  };
+}
+
+// test a restriction that uses `acquirerMeta`
+async function _limitByAcquirerMembership({
+  /*acquirerId, */ acquirerMeta, /*acquired,*/ request,
+  /*zones, */ restriction, now = Date.now() /*, getAcquisitionMap*/
+}) {
+  const {methodOptions: {memberField, requiredValue}} = restriction;
+
+  // if `acquirer` is not a member, then all matching resources that match the
+  // restriction are in excess
+  let excess = 0;
+  if(acquirerMeta?.[memberField] !== requiredValue) {
+    // add acquisitions that occur >= now as excess
+    for(const {resource, count, requested} of request) {
+      if(resource !== restriction.resource || requested < now) {
+        continue;
+      }
+      excess += count;
+    }
+  }
+
+  return {
+    authorized: excess === 0,
+    excess,
+    // check is at a point in time, no need to track
+    ttl: 0
   };
 }

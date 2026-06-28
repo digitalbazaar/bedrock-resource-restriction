@@ -24,6 +24,7 @@ export const RESOURCES = {
   POTATO: uuid(),
   STRAWBERRY: uuid(),
   TANGERINE: uuid(),
+  MEMBER_ONLY: uuid(),
   GEOGRAPHICAL_ANY: 'urn:geo:any',
   GEOGRAPHICAL_EAST: 'urn:geo:east',
   GEOGRAPHICAL_WEST: 'urn:geo:west'

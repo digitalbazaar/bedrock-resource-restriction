@@ -940,6 +940,166 @@ describe('Resources', function() {
     }
   });
 
+  it('should pass check with acceptable "acquirerMeta"', async function() {
+    const id = await generateId();
+    await restrictions.insert({
+      restriction: {
+        id,
+        zone: ZONES.ONE,
+        resource: RESOURCES.MEMBER_ONLY,
+        method: 'limitByAcquirerMembership',
+        methodOptions: {
+          memberField: 'member',
+          requiredValue: true
+        }
+      }
+    });
+    const now = Date.now();
+    const acquirerId = uuid();
+    const acquirerMeta = {member: true};
+    const request = [
+      {resource: RESOURCES.MEMBER_ONLY, count: 1, requested: now}
+    ];
+    const acquisitionTtl = 0;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.check({
+      acquirerId, acquirerMeta, request, acquisitionTtl, zones
+    });
+    const expectedResult = {
+      authorized: true,
+      excessResources: [],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should acquire with acceptable "acquirerMeta"', async function() {
+    const id = await generateId();
+    await restrictions.insert({
+      restriction: {
+        id,
+        zone: ZONES.ONE,
+        resource: RESOURCES.MEMBER_ONLY,
+        method: 'limitByAcquirerMembership',
+        methodOptions: {
+          memberField: 'member',
+          requiredValue: true
+        }
+      }
+    });
+    const now = Date.now();
+    const acquirerId = uuid();
+    const acquirerMeta = {member: true};
+    const request = [
+      {resource: RESOURCES.MEMBER_ONLY, count: 1, requested: now}
+    ];
+    const acquisitionTtl = 0;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.acquire({
+      acquirerId, acquirerMeta, request, acquisitionTtl, zones
+    });
+    const expectedResult = {
+      authorized: true,
+      excessResources: [],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should deny check with missing "acquirerMeta"', async function() {
+    const now = Date.now();
+    const acquirerId = uuid();
+    const acquirerMeta = undefined;
+    const request = [
+      {resource: RESOURCES.MEMBER_ONLY, count: 2, requested: now}
+    ];
+    const acquisitionTtl = 0;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.check({
+      acquirerId, acquirerMeta, request, acquisitionTtl, zones
+    });
+    const expectedResult = {
+      authorized: false,
+      excessResources: [{
+        resource: RESOURCES.MEMBER_ONLY,
+        count: 2
+      }],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should deny acquire with missing "acquirerMeta"', async function() {
+    const now = Date.now();
+    const acquirerId = uuid();
+    const acquirerMeta = undefined;
+    const request = [
+      {resource: RESOURCES.MEMBER_ONLY, count: 2, requested: now}
+    ];
+    const acquisitionTtl = 0;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.acquire({
+      acquirerId, acquirerMeta, request, acquisitionTtl, zones
+    });
+    const expectedResult = {
+      authorized: false,
+      excessResources: [{
+        resource: RESOURCES.MEMBER_ONLY,
+        count: 2
+      }],
+      untrackedResources: []
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should deny check with present, unacceptable "acquirerMeta"',
+    async function() {
+      const now = Date.now();
+      const acquirerId = uuid();
+      const acquirerMeta = {member: false};
+      const request = [
+        {resource: RESOURCES.MEMBER_ONLY, count: 2, requested: now}
+      ];
+      const acquisitionTtl = 0;
+      const zones = [ZONES.ONE, ZONES.TWO];
+      const result = await resources.check({
+        acquirerId, acquirerMeta, request, acquisitionTtl, zones
+      });
+      const expectedResult = {
+        authorized: false,
+        excessResources: [{
+          resource: RESOURCES.MEMBER_ONLY,
+          count: 2
+        }],
+        untrackedResources: []
+      };
+      assertCheckResult(result, expectedResult);
+    });
+
+  it('should deny acquire with present, unacceptable "acquirerMeta"',
+    async function() {
+      const now = Date.now();
+      const acquirerId = uuid();
+      const acquirerMeta = {member: false};
+      const request = [
+        {resource: RESOURCES.MEMBER_ONLY, count: 2, requested: now}
+      ];
+      const acquisitionTtl = 30000;//0;
+      const zones = [ZONES.ONE, ZONES.TWO];
+      const result = await resources.acquire({
+        acquirerId, acquirerMeta, request, acquisitionTtl, zones
+      });
+      const expectedResult = {
+        authorized: false,
+        excessResources: [{
+          resource: RESOURCES.MEMBER_ONLY,
+          count: 2
+        }],
+        untrackedResources: []
+      };
+      assertCheckResult(result, expectedResult);
+    });
+
   // only run this test during CI as it is a long-running test
   if(process.env.CI) {
     it('should acquire successfully after ttl', async function() {
