@@ -44,6 +44,9 @@ export function assertCheckResult(result, expectedResult) {
   result.excessResources.should.be.an('array');
   result.should.have.property('untrackedResources');
   result.untrackedResources.should.be.an('array');
+  if(result.acquirerMetaMissing !== undefined) {
+    result.acquirerMetaMissing.should.be.a('boolean');
+  }
   if(expectedResult) {
     result.should.deep.equal(expectedResult);
   }
