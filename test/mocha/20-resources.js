@@ -25,7 +25,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: [RESOURCES.APPLE]
+      untrackedResources: [RESOURCES.APPLE],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -63,7 +64,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: [RESOURCES.APPLE]
+      untrackedResources: [RESOURCES.APPLE],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -94,7 +96,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -115,7 +118,8 @@ describe('Resources', function() {
         resource: RESOURCES.ORANGE,
         count: 1
       }],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -133,7 +137,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -175,7 +180,8 @@ describe('Resources', function() {
         resource: RESOURCES.ORANGE,
         count: 1
       }],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -227,7 +233,8 @@ describe('Resources', function() {
           resource: RESOURCES.LIME,
           count: 1
         }],
-        untrackedResources: []
+        untrackedResources: [],
+        acquirerMetaInsufficient: false
       };
       assertCheckResult(result, expectedResult);
     });
@@ -278,7 +285,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -297,7 +305,8 @@ describe('Resources', function() {
             resource: RESOURCES.TANGERINE,
             count: 1
           }],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -319,7 +328,8 @@ describe('Resources', function() {
             resource: RESOURCES.TANGERINE,
             count: 1
           }],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -338,7 +348,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -360,7 +371,8 @@ describe('Resources', function() {
             resource: RESOURCES.TANGERINE,
             count: 1
           }],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -417,7 +429,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -436,7 +449,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
 
@@ -456,7 +470,8 @@ describe('Resources', function() {
               resource: RESOURCES.POTATO,
               count: 1
             }],
-            untrackedResources: []
+            untrackedResources: [],
+            acquirerMetaInsufficient: false
           };
           assertCheckResult(result, expectedResult);
         }
@@ -476,7 +491,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -498,7 +514,8 @@ describe('Resources', function() {
             resource: RESOURCES.POTATO,
             count: 1
           }],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -520,7 +537,8 @@ describe('Resources', function() {
             resource: RESOURCES.POTATO,
             count: 1
           }],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -570,7 +588,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -592,7 +611,8 @@ describe('Resources', function() {
         resource: RESOURCES.ORANGE,
         count: 1
       }],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
     // TODO: get acquisition record and add assertions
@@ -628,7 +648,8 @@ describe('Resources', function() {
       const expectedAcquireResult = {
         authorized: true,
         excessResources: [],
-        untrackedResources: []
+        untrackedResources: [],
+        acquirerMetaInsufficient: false
       };
       assertCheckResult(acquireResult, expectedAcquireResult);
 
@@ -675,7 +696,8 @@ describe('Resources', function() {
     const expectedAcquireResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(acquireResult, expectedAcquireResult);
 
@@ -768,7 +790,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -801,7 +824,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
 
@@ -886,7 +910,8 @@ describe('Resources', function() {
       const expectedResult = {
         authorized: true,
         excessResources: [],
-        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY]
+        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY],
+        acquirerMetaInsufficient: false
       };
       assertCheckResult(result, expectedResult);
     }
@@ -913,7 +938,8 @@ describe('Resources', function() {
           resource: RESOURCES.GEOGRAPHICAL_WEST,
           count: 1
         }],
-        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY]
+        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY],
+        acquirerMetaInsufficient: false
       };
       assertCheckResult(result, expectedResult);
     }
@@ -934,7 +960,8 @@ describe('Resources', function() {
       const expectedResult = {
         authorized: true,
         excessResources: [],
-        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY]
+        untrackedResources: [RESOURCES.GEOGRAPHICAL_ANY],
+        acquirerMetaInsufficient: false
       };
       assertCheckResult(result, expectedResult);
     }
@@ -968,7 +995,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1001,7 +1029,8 @@ describe('Resources', function() {
     const expectedResult = {
       authorized: true,
       excessResources: [],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: false
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1024,7 +1053,8 @@ describe('Resources', function() {
         resource: RESOURCES.MEMBER_ONLY,
         count: 2
       }],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: true
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1047,7 +1077,56 @@ describe('Resources', function() {
         resource: RESOURCES.MEMBER_ONLY,
         count: 2
       }],
-      untrackedResources: []
+      untrackedResources: [],
+      acquirerMetaInsufficient: true
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should deny check with missing "acquirerMeta" field', async function() {
+    const now = Date.now();
+    const acquirerId = uuid();
+    const acquirerMeta = {};
+    const request = [
+      {resource: RESOURCES.MEMBER_ONLY, count: 2, requested: now}
+    ];
+    const acquisitionTtl = 0;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.check({
+      acquirerId, acquirerMeta, request, acquisitionTtl, zones
+    });
+    const expectedResult = {
+      authorized: false,
+      excessResources: [{
+        resource: RESOURCES.MEMBER_ONLY,
+        count: 2
+      }],
+      untrackedResources: [],
+      acquirerMetaInsufficient: true
+    };
+    assertCheckResult(result, expectedResult);
+  });
+
+  it('should deny acquire with missing "acquirerMeta" field', async function() {
+    const now = Date.now();
+    const acquirerId = uuid();
+    const acquirerMeta = {};
+    const request = [
+      {resource: RESOURCES.MEMBER_ONLY, count: 2, requested: now}
+    ];
+    const acquisitionTtl = 0;
+    const zones = [ZONES.ONE, ZONES.TWO];
+    const result = await resources.acquire({
+      acquirerId, acquirerMeta, request, acquisitionTtl, zones
+    });
+    const expectedResult = {
+      authorized: false,
+      excessResources: [{
+        resource: RESOURCES.MEMBER_ONLY,
+        count: 2
+      }],
+      untrackedResources: [],
+      acquirerMetaInsufficient: true
     };
     assertCheckResult(result, expectedResult);
   });
@@ -1071,7 +1150,8 @@ describe('Resources', function() {
           resource: RESOURCES.MEMBER_ONLY,
           count: 2
         }],
-        untrackedResources: []
+        untrackedResources: [],
+        acquirerMetaInsufficient: false
       };
       assertCheckResult(result, expectedResult);
     });
@@ -1095,7 +1175,8 @@ describe('Resources', function() {
           resource: RESOURCES.MEMBER_ONLY,
           count: 2
         }],
-        untrackedResources: []
+        untrackedResources: [],
+        acquirerMetaInsufficient: false
       };
       assertCheckResult(result, expectedResult);
     });
@@ -1134,7 +1215,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1155,7 +1237,8 @@ describe('Resources', function() {
             resource: RESOURCES.PLUM,
             count: 1
           }],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1176,7 +1259,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1221,7 +1305,8 @@ describe('Resources', function() {
         const expectedResult = {
           authorized: true,
           excessResources: [],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
@@ -1242,7 +1327,8 @@ describe('Resources', function() {
             resource: RESOURCES.PLUM,
             count: 1
           }],
-          untrackedResources: []
+          untrackedResources: [],
+          acquirerMetaInsufficient: false
         };
         assertCheckResult(result, expectedResult);
       }
