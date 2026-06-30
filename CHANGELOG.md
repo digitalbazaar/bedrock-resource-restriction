@@ -1,6 +1,6 @@
 # bedrock-resource-restriction ChangeLog
 
-## 16.1.0 - 2026-mm-dd
+## 16.1.0 - 2026-06-30
 
 ### Added
 - Add ability to pass `acquirerMeta` object to acquisition and check APIs. If
