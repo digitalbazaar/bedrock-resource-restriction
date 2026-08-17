@@ -46,7 +46,7 @@ bedrock.start();
 
 async function _limitOneGeographicalRegion({
   /*acquirerId, acquirerMeta, acquired,*/ request,
-  /*zones, restriction, now = Date.now(),*/ getAcquisitionMap
+  /*zones, restriction,*/ now = Date.now(), getAcquisitionMap
 }) {
   // ensure that all acquisitions will be in the same geographical region...
 
@@ -66,7 +66,12 @@ async function _limitOneGeographicalRegion({
   // ensure any new acquisitions will not introduce a new region
   let excess = 0;
   let newRegion;
-  for(const {resource} of request) {
+  for(const {requested, resource} of request) {
+    // skip resources requested in the past; consider only future acquisitions
+    if(requested < now) {
+      continue;
+    }
+
     // process any non-"any" geo resource...
     if(resource.startsWith('urn:geo:') && resource !== 'urn:geo:any') {
       // save the prospective new region...
